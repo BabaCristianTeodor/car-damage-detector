@@ -1,15 +1,3 @@
-Perfect Teddy, îl refac **de la zero**, **mult mai curat**, **mult mai frumos**, **profesional**, **super interactiv**, dar și **100% compatibil cu GitHub** (fără CSS custom care nu se redă, doar HTML + Markdown care sigur funcționează).
-
-🔵 **Important:** GitHub permite HTML, dar NU permite CSS custom în `<style>` → deci fac totul cu HTML, badge-uri, boxuri stilizate doar prin layout + culori inline (ce funcționează garantat).
-
----
-
-# 🚀 **README.md – Versiunea Finală, Premium, Interactivă, GitHub-Safe**
-
-Copiază-l **exact** așa — totul funcționează direct.
-
----
-
 <div align="center">
 
 <h1>🚗 Car Damage Detector</h1>
