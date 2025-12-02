@@ -219,10 +219,3 @@ Acest proiect demonstrează:
 * **Baba Cristian-Teodor** – Student FIIR, UPB
 
 ---
-
-# 🔥 Vrei să fac și:
-
-✔ README pentru Etapa 4
-✔ README pentru tot proiectul (landing page complet)
-✔ Poster A3 pentru prezentare
-✔ PDF final academic formatat perfect pentru profesor?
