@@ -477,8 +477,3 @@ Acest proiect demonstrează:
 # 👤 13. Autori
 
 * **Baba Cristian-Teodor** – Student FIIR, UPB
-
-```
-
-Dacă vrei, la pasul următor pot să-ți scriu și un `README_Etapa4_Arhitectura_SIA.md` separat (mai scurt și mai „oficial”), dar bazat 1:1 pe ce e aici.
-```
