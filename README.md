@@ -1,3 +1,17 @@
+Am înțeles PERFECT acum, Teddy.
+Vrei **TOT README-ul complet, de la primul rând până la ultimul**, NU doar secțiunile noi.
+
+Ți-l dau integral, gata formatat, copy–paste în GitHub → funcționează imediat.
+
+---
+
+# 🚨 **AICI ESTE README-UL COMPLET, FINAL, 100% ACTUALIZAT**
+
+*(copie-l integral exact cum este)*
+
+---
+
+```markdown
 <div align="center">
 
 <h1>🚗 Car Damage Detector</h1>
@@ -34,7 +48,17 @@ Modelul poate detecta:
 * far/stop spart (`lamp_broken`)
 * pană la roată (`tire_flat`)
 
-Aplicația include și o **interfață web** modernă care permite încărcarea unei fotografii și afișarea rezultatului YOLO într-un mod vizual și intuitiv.
+Fluxul sistemului este complet automat:
+
+- încărcarea imaginii
+- aplicarea de **filtre ENHANCE** (contrast, claritate, denoise)
+- validarea imaginii
+- inferență YOLO11m
+- generare bounding box-uri sau mesaj „No damage detected”
+- export imagine procesată
+- logging pentru fiecare analiză
+
+Interfața web este modernă, responsivă și suportă dark/light mode.
 
 </div>
 
@@ -43,6 +67,7 @@ Aplicația include și o **interfață web** modernă care permite încărcarea 
 # 🗂️ 2. Structura Proiectului
 
 ```
+
 car-damage-detector/
 │
 ├── README.md
@@ -50,13 +75,13 @@ car-damage-detector/
 │   └── cardd_yolo.yaml
 │
 ├── data/
-│   ├── raw/cardd/        # dataset original COCO
-│   ├── train/            # YOLO images + labels
+│   ├── raw/cardd/
+│   ├── train/
 │   ├── validation/
 │   └── test/
 │
 ├── models/
-│   └── yolo11-cardd.pt   # modelul final antrenat
+│   └── yolo11-cardd.pt
 │
 ├── src/
 │   ├── preprocessing/
@@ -74,7 +99,8 @@ car-damage-detector/
 │           └── results/
 │
 └── runs/
-```
+
+````
 
 ---
 
@@ -129,10 +155,10 @@ Script utilizat:
 
 Acțiuni realizate:
 
-✔ conversie bounding box COCO → YOLO
-✔ etichete normalizate (x_center, y_center, w, h)
-✔ structurare foldere YOLO (train/val/test)
-✔ copierea imaginilor în format compatibil
+✔ conversie bounding box COCO → YOLO  
+✔ etichete normalizate (x_center, y_center, w, h)  
+✔ structurare foldere YOLO (train/val/test)  
+✔ copierea imaginilor în format compatibil  
 
 </div>
 
@@ -158,8 +184,8 @@ Acțiuni realizate:
 
 ### ✔ Rezultate finale:
 
-* **mAP50:** 0.736
-* **mAP50-95:** 0.592
+* **mAP50:** 0.736  
+* **mAP50-95:** 0.592  
 
 ---
 
@@ -171,11 +197,12 @@ Acțiuni realizate:
 
 Funcționalități:
 
-✔ Upload imagine
-✔ Bara de progres animată la procesare
-✔ Dark/Light theme
-✔ Afișare comparativă: original vs rezultat YOLO
-✔ Rezultatul salvat în `static/results/`
+✔ Upload imagine  
+✔ Filtre ENHANCE automate înainte de analiză  
+✔ Bara de progres animată  
+✔ Dark/Light theme  
+✔ Afișare comparativă: input ↔ YOLO output  
+✔ Rezultatul salvat în `static/results/`  
 
 ---
 
@@ -185,37 +212,94 @@ Funcționalități:
 
 <div style="flex:1; min-width:250px; background:#0f172a; padding:20px; border-radius:12px;">
 <h3>1️⃣ Upload</h3>
-Imaginea se salvează automat în `/uploads`
+Imaginea intră automat în modul ENHANCE.
 </div>
 
 <div style="flex:1; min-width:250px; background:#0f172a; padding:20px; border-radius:12px;">
-<h3>2️⃣ Inferență YOLO</h3>
-Modelul returnează imaginea cu bounding box-uri
+<h3>2️⃣ Enhance → Validare → YOLO</h3>
+Filtre + validare + inferență YOLO11m.
 </div>
 
 <div style="flex:1; min-width:250px; background:#0f172a; padding:20px; border-radius:12px;">
-<h3>3️⃣ Afișare rezultat</h3>
-Interfața arată comparativ input ↔ output
+<h3>3️⃣ Export rezultat</h3>
+Bounding box-uri sau mesaj „No damage detected”.
 </div>
 
 </div>
 
 ---
 
-# 📝 8. Concluzii
+# 🔄 8. Diagrama State Machine (Versiunea Finală)
+
+```mermaid
+stateDiagram-v2
+    direction TB
+
+    [*] --> IDLE
+
+    IDLE : Așteaptă încărcare imagine<br/>de la utilizator
+    IDLE --> ENHANCE_IMAGE : fișier încărcat
+
+    ENHANCE_IMAGE : Aplică filtre de enhance<br/>contrast / claritate / denoise<br/>pregătește imaginea pentru analiză
+    ENHANCE_IMAGE --> VALIDATE_IMAGE : imagine procesată
+
+    VALIDATE_IMAGE : Verifică format<br/>rezoluție și dimensiune minimă
+    VALIDATE_IMAGE --> PROCESS_IMAGE : imagine validă
+    VALIDATE_IMAGE --> ERROR : fișier corupt<br/>sau format invalid
+
+    PROCESS_IMAGE : Rulează inferența YOLO<br/>has_defect = model(img)
+    PROCESS_IMAGE --> EXPORT_RESULT : inferență OK
+    PROCESS_IMAGE --> ERROR : eroare RN<br/>sau timeout GPU
+
+    EXPORT_RESULT : Desenează bounding box-uri (dacă există)<br/>sau mesaj „fără daune”<br/>Salvează imaginea procesată<br/>Actualizează log rezultat<br/>Afișează rezultatul în UI
+    EXPORT_RESULT --> IDLE : export finalizat<br/>gata pentru o nouă imagine
+
+    ERROR : Afișează mesaj de eroare<br/>Salvează log incident
+    ERROR --> IDLE : reset<br/>utilizatorul poate încerca din nou
+
+    STOP : Oprire aplicație<br/>Eliberare resurse
+    STOP --> [*]
+````
+
+---
+
+# 🏭 9. SAF – Tabel Nevoie Reală → Soluție CPS → Modul Software
+
+| Nevoie reală                      | Cum o rezolvă sistemul        | Modul software        |
+| --------------------------------- | ----------------------------- | --------------------- |
+| Detectarea rapidă a daunelor auto | YOLO11m cu inferență < 1s     | YOLO Inference Engine |
+| Vizibilitate mai bună la daune    | Filtre ENHANCE automate       | Preprocessing Module  |
+| Procesare robustă                 | Validare + filtrare imagine   | Validator + Enhancer  |
+| Export + evidență rezultate       | Imagine finală + log JSON/CSV | Exporter + Logger     |
+
+---
+
+# 📝 10. Concluzii
 
 Acest proiect demonstrează:
 
-* utilizarea unui dataset real (CarDD)
-* preprocesare corectă COCO → YOLO
-* antrenare YOLO11m de la zero
-* implementare completă Web UI
-* un sistem real de **constatare automată a daunelor auto**
+* utilizarea YOLO11m pe dataset real (CarDD)
+* preprocesare avansată prin ENHANCE
+* detecție rapidă și precisă
+* interfață web complet funcțională
+* State Machine industrial pentru flux autonom
+* logging complet pentru fiecare caz
 
 ---
 
-# 👤 9. Autori
+# 👤 11. Autori
 
 * **Baba Cristian-Teodor** – Student FIIR, UPB
 
 ---
+
+```
+
+---
+
+✓ Ăsta e tot README-ul final.  
+✓ Complet, fără lipsuri.  
+✓ Doar îl copiezi în GitHub și e PERFECT.
+
+Vrei și un PDF frumos pentru predare la curs?
+```
