@@ -44,7 +44,7 @@ Fluxul sistemului este complet automat:
 - export imagine procesată
 - logging pentru fiecare analiză
 
-Interfața web este modernă, responsivă și suportă dark/light mode.
+Interfața web este modernă și responsivă.
 
 </div>
 
@@ -83,6 +83,9 @@ car-damage-detector/
 │ └── results/
 │
 └── runs/
+
+yaml
+Copy code
 
 ---
 
@@ -173,10 +176,6 @@ Acțiuni realizate:
 
 # 🌐 6. Interfața Web (Flask)
 
-<div align="center">
-<img src="https://dummyimage.com/1000x450/0f172a/38bdf8&text=Car+Damage+Web+Interface" width="90%" style="border-radius:16px;">
-</div>
-
 Funcționalități:
 
 ✔ Upload imagine  
@@ -213,7 +212,18 @@ Bounding box-uri sau mesaj „No damage detected”.
 
 # 🔄 8. Diagrama State Machine (Versiunea Finală)
 
-```mermaid
+## 8.1. Diagrama grafică
+
+> 📌 Imaginea de mai jos este diagrama finală a fluxului aplicației (State Machine).
+
+```markdown
+![State Machine – Car Damage Detector](docs/state_machine_car_damage.png)
+👉 Salvează imaginea ta în docs/state_machine_car_damage.png
+sau schimbă calea cu numele fișierului real.
+
+8.2. Variantă Mermaid (opțional, randabilă direct în GitHub)
+mermaid
+Copy code
 stateDiagram-v2
     direction TB
 
@@ -241,27 +251,128 @@ stateDiagram-v2
 
     STOP : Oprire aplicație<br/>Eliberare resurse
     STOP --> [*]
+8.3. Descrierea stărilor și tranzițiilor din diagramă
+🔹 Așteaptă încărcare imagine de la utilizator (IDLE)
+
+Reprezintă starea de repaus a aplicației.
+
+Serverul Flask rulează, dar nu procesează nimic.
+
+Așteaptă ca utilizatorul să facă upload la o imagine cu o mașină avariată sau nu.
+
+🔹 Aplică filtre de enhance – contrast / claritate / denoise
+
+După ce fișierul este încărcat, trece printr-un modul de preprocesare.
+
+Se aplică:
+
+creștere de contrast (pentru a scoate în evidență zgârieturi / muchii)
+
+claritate (sharpen)
+
+denoise (pentru poze făcute pe timp de noapte sau cu zgomot)
+
+Scop: să fie mai ușor atât pentru YOLO, cât și pentru utilizator să observe daunele.
+
+🔹 Verifică format, rezoluție și dimensiune minimă (VALIDATE_IMAGE)
+
+Verifică dacă fișierul:
+
+este imagine (JPG/PNG etc.)
+
+nu este corupt sau gol
+
+are o rezoluție suficient de mare pentru inferență
+
+Dacă verificarea eșuează → trece în starea Afișează mesaj de eroare.
+
+Dacă totul e ok → trece în Rulează inferența YOLO.
+
+🔹 Rulează inferența YOLO – has_defect = model(img) (PROCESS_IMAGE)
+
+Imaginea preprocesată este trimisă către modelul YOLO11m.
+
+Modelul returnează:
+
+bounding boxes
+
+clase detectate (scratch, dent, crack etc.)
+
+confidence score pentru fiecare detectare
+
+Din această stare sunt două ieșiri:
+
+inferență reușită → Desenează bounding box-uri / salvează imaginea procesată
+
+eroare GPU / model / timeout → Afișează mesaj de eroare
+
+🔹 Desenează bounding box-uri, salvează imaginea procesată, afișează rezultatul în UI (EXPORT_RESULT)
+
+Dacă has_defect este adevărat:
+
+se desenează bounding box-uri pe imagine, colorate pe clase
+
+se salvează imaginea rezultată în static/results/
+
+Dacă nu s-a detectat nicio daună:
+
+se poate afișa textul „No damage detected” peste imagine sau lângă ea
+
+În ambele cazuri:
+
+se salvează un log (nume fișier, clase, scoruri, timp de procesare)
+
+se afișează rezultatul în interfața web
+
+apoi aplicația revine în IDLE și este gata pentru o nouă imagine.
+
+🔹 Afișează mesaj de eroare, salvează log incident (ERROR)
+
+Gestionarea situațiilor anormale:
+
+fișier corupt / format neacceptat
+
+eroare de inferență (model, GPU, memorie etc.)
+
+Utilizatorul vede un mesaj clar în UI (de ex. „Fișier invalid” sau „Eroare la model”).
+
+Se salvează un log de incident pentru debugging.
+
+Din această stare:
+
+se poate reveni în IDLE (utilizatorul poate încărca altă imagine).
+
+🔹 Oprire aplicație / eliberare resurse (STOP)
+
+Reprezintă oprirea controlată a sistemului:
+
+se eliberează resursele (GPU, fișiere temporare etc.)
+
+se oprește serverul Flask
+
+În diagrama grafică, această stare este conectată de regulă la un eveniment extern (închiderea aplicației).
+
+🔹 Tranziții importante
+
+IDLE → ENHANCE_IMAGE: apare în momentul în care utilizatorul încarcă o imagine.
+
+ENHANCE_IMAGE → VALIDATE_IMAGE: după ce filtrarea și normalizarea au fost aplicate.
+
+VALIDATE_IMAGE → PROCESS_IMAGE: doar dacă fișierul trece toate verificările.
+
+PROCESS_IMAGE → EXPORT_RESULT: inferența a rulat fără erori.
+
+PROCESS_IMAGE → ERROR: apar erori la rețea / GPU / timp de procesare.
+
+EXPORT_RESULT → IDLE: exportul este finalizat, aplicația se pregătește pentru o nouă imagine.
+
+ERROR → IDLE: utilizatorul poate încerca din nou cu o altă imagine.
+
+Prin această structură, sistemul se comportă ca un Sistem Ciber-Fizic simplificat, cu un flux clar: input → prelucrare → decizie → output, plus gestiunea erorilor.
+
 🏭 9. SAF – Tabel Nevoie Reală → Soluție CPS → Modul Software
 Nevoie reală	Cum o rezolvă sistemul	Modul software
 Detectarea rapidă a daunelor auto	YOLO11m cu inferență < 1s	YOLO Inference Engine
 Vizibilitate mai bună la daune	Filtre ENHANCE automate	Preprocessing Module
 Procesare robustă	Validare + filtrare imagine	Validator + Enhancer
 Export + evidență rezultate	Imagine finală + log JSON/CSV	Exporter + Logger
-
-📝 10. Concluzii
-Acest proiect demonstrează:
-
-utilizarea YOLO11m pe dataset real (CarDD)
-
-preprocesare avansată prin ENHANCE
-
-detecție rapidă și precisă
-
-interfață web complet funcțională
-
-State Machine industrial pentru flux autonom
-
-logging complet pentru fiecare caz
-
-👤 11. Autori
-Baba Cristian-Teodor – Student FIIR, UPB
