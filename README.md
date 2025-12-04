@@ -84,9 +84,6 @@ car-damage-detector/
 │
 └── runs/
 
-yaml
-Copy code
-
 ---
 
 # 📊 3. Analiza Datasetului CarDD
