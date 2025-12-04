@@ -346,8 +346,3 @@ Acest proiect demonstrează:
 # 👤 11. Autori
 
 * **Baba Cristian-Teodor** – Student FIIR, UPB
-
-```
-
-- numele e identic (case-sensitive).
-```
