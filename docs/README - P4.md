@@ -1,0 +1,580 @@
+<div align="center">
+
+<h1>🚗 Car Damage Detector</h1>
+
+<h3>YOLO11m + CarDD • Deep Learning • UPB – FIIR</h3>
+
+<br>
+
+<img src="https://dummyimage.com/1200x260/111827/4c7dff&text=Car+Damage+Detector+AI" width="100%" style="border-radius:16px;">
+
+<br><br>
+
+<img src="https://img.shields.io/badge/Framework-YOLO11m-blue?style=for-the-badge">
+<img src="https://img.shields.io/badge/Dataset-CarDD-green?style=for-the-badge">
+<img src="https://img.shields.io/badge/Task-Object%20Detection-orange?style=for-the-badge">
+<img src="https://img.shields.io/badge/WebUI-Flask-purple?style=for-the-badge">
+
+</div>
+
+---
+
+# 🧩 1. Descrierea Proiectului
+
+<div style="padding:18px; background:#0f172a; border-radius:12px; border:1px solid #1e293b;">
+
+Acest proiect implementează un sistem inteligent de **detecție automată a daunelor auto** folosind rețele neuronale de tipul **YOLO11m**, antrenat pe dataset-ul Car Damage Dataset (**CarDD**).
+
+Modelul poate detecta:
+
+* zgârieturi (`scratch`)
+* îndoiri (`dent`)
+* crăpături (`crack`)
+* geam spart (`glass_shatter`)
+* far/stop spart (`lamp_broken`)
+* pană la roată (`tire_flat`)
+
+Fluxul sistemului este complet automat:
+
+- încărcarea imaginii
+- aplicarea de **filtre ENHANCE** (contrast, claritate, denoise)
+- validarea imaginii
+- inferență YOLO11m
+- generare bounding box-uri sau mesaj „No damage detected”
+- export imagine procesată
+- logging pentru fiecare analiză
+
+Interfața web este modernă și responsivă.
+
+</div>
+
+---
+
+# 🗂️ 2. Structura Proiectului
+
+```text
+car-damage-detector/
+│
+├── README.md
+├── README_Etapa4_Arhitectura_SIA.md   # (opțional, pentru predare RN)
+├── config/
+│   └── cardd_yolo.yaml
+│
+├── data/
+│   ├── raw/cardd/        # dataset original COCO
+│   ├── train/            # YOLO images + labels
+│   ├── validation/
+│   ├── test/
+│   └── generated/        # imagini sintetice (contribuție originală 40%)
+│
+├── models/
+│   ├── yolo11-cardd.pt   # modelul final antrenat
+│   └── yolo11-base.pt    # model neantrenat (schelet RN pentru Etapa 4)
+│
+├── docs/
+│   ├── state_machine_car_damage.png   # diagrama State Machine
+│   └── screenshots/
+│       └── ui_demo.png                # screenshot interfață web
+│
+├── src/
+│   ├── data_acquisition/
+│   │   └── generate_synthetic_damage_data.py   # generare imagini originale
+│   │
+│   ├── preprocessing/
+│   │   ├── explore_cardd.py
+│   │   └── convert_coco_to_yolo.py
+│   │
+│   ├── neural_network/
+│   │   └── train_yolo11.py
+│   │
+│   └── web/
+│       ├── app.py
+│       ├── templates/
+│       │   └── index.html
+│       └── static/
+│           ├── style.css
+│           ├── uploads/
+│           └── results/
+│
+└── runs/
+````
+
+---
+
+# 📊 3. Analiza Datasetului CarDD
+
+<div style="background:#0f172a; padding:20px; border-radius:12px; border:1px solid #1e293b">
+
+### ✔ Statistici generale
+
+* Train: **2816 imagini**
+* Validation: **810 imagini**
+* Test: **374 imagini**
+* Total imagini: **4000**
+* Total clase: **6**
+
+### ✔ Clase disponibile
+
+| ID | Clasă         |
+| -- | ------------- |
+| 0  | dent          |
+| 1  | scratch       |
+| 2  | crack         |
+| 3  | glass_shatter |
+| 4  | lamp_broken   |
+| 5  | tire_flat     |
+
+### ✔ Distribuția pe clase (train)
+
+* scratch: **2560**
+* dent: **1806**
+* crack: **651**
+* glass_shatter: **475**
+* lamp_broken: **494**
+* tire_flat: **225**
+
+### ✔ Bounding box statistics
+
+* bbox mediu: **78.608 px²**
+* mediană: **29.108 px²**
+* min: 60 px², max: 801453 px²
+* adnotări / imagine: **2.21**
+
+</div>
+
+---
+
+# 🔧 4. Preprocesarea Datasetului (COCO → YOLO)
+
+<div style="padding:18px; background:#1e1b4b; border-left:5px solid #4f46e5; border-radius:12px;">
+
+Script utilizat: `src/preprocessing/convert_coco_to_yolo.py`
+
+Acțiuni realizate:
+
+✔ conversie bounding box COCO → YOLO
+✔ etichete normalizate (x_center, y_center, w, h)
+✔ structurare foldere YOLO (train/val/test)
+✔ copierea imaginilor în format compatibil
+
+</div>
+
+---
+
+# 🧠 5. Antrenarea Modelului YOLO11m
+
+### ✔ Script:
+
+`src/neural_network/train_yolo11.py`
+
+### ✔ Parametri:
+
+* `epochs = 200`
+* `imgsz = 768`
+* `batch = 8`
+* augmentări avansate:
+
+  * hsv transform
+  * scaling
+  * random erasing
+  * flip LR
+
+### ✔ Rezultate finale:
+
+* **mAP50:** 0.736
+* **mAP50-95:** 0.592
+
+---
+
+# 🌐 6. Interfața Web (Flask)
+
+Funcționalități:
+
+✔ Upload imagine
+✔ Filtre ENHANCE automate înainte de analiză
+✔ Bară de progres animată
+✔ Dark/Light theme
+✔ Afișare comparativă: input ↔ YOLO output
+✔ Rezultatul salvat în `static/results/`
+
+---
+
+# 🚀 7. Workflow Demo
+
+<div style="display:flex; justify-content:space-between; gap:20px;">
+
+<div style="flex:1; min-width:250px; background:#0f172a; padding:20px; border-radius:12px;">
+<h3>1️⃣ Upload</h3>
+Imaginea intră automat în modul ENHANCE.
+</div>
+
+<div style="flex:1; min-width:250px; background:#0f172a; padding:20px; border-radius:12px;">
+<h3>2️⃣ Enhance → Validare → YOLO</h3>
+Filtre + validare + inferență YOLO11m.
+</div>
+
+<div style="flex:1; min-width:250px; background:#0f172a; padding:20px; border-radius:12px;">
+<h3>3️⃣ Export rezultat</h3>
+Bounding box-uri sau mesaj „No damage detected”.
+</div>
+
+</div>
+
+---
+
+# 🔄 8. Diagrama State Machine (Versiunea Finală)
+
+## 8.1. Diagrama grafică
+
+![State Machine – Car Damage Detector](docs/state_machine_car_damage.png)
+
+---
+
+## 8.2. Descrierea stărilor și tranzițiilor
+
+### 🔹 IDLE – „Așteaptă încărcare imagine de la utilizator”
+
+* Stare de repaus a aplicației.
+* Serverul Flask rulează, dar nu procesează nimic.
+* Așteaptă ca utilizatorul să facă upload la o imagine cu mașina (avariată sau nu).
+
+---
+
+### 🔹 ENHANCE_IMAGE – „Aplică filtre de enhance: contrast / claritate / denoise”
+
+* După upload, imaginea trece printr-un modul de **preprocesare**.
+* Se aplică:
+
+  * creștere de contrast (pentru a scoate în evidență zgârieturi și muchii),
+  * claritate (sharpen),
+  * denoise (pentru poze cu zgomot / lumină slabă).
+* Scop: să fie mai ușor atât pentru YOLO, cât și pentru utilizator, să observe daunele.
+
+---
+
+### 🔹 VALIDATE_IMAGE – „Verifică format, rezoluție și dimensiune minimă”
+
+* Verifică dacă fișierul:
+
+  * este o imagine validă (JPG/PNG),
+  * nu este corupt sau gol,
+  * are rezoluție minimă acceptată pentru inferență.
+* Dacă verificarea eșuează → tranziție către starea **ERROR**.
+* Dacă totul este ok → tranziție către **PROCESS_IMAGE**.
+
+---
+
+### 🔹 PROCESS_IMAGE – „Rulează inferența YOLO – `has_defect = model(img)`”
+
+* Imaginea preprocesată și validată este trimisă către modelul **YOLO11m**.
+* Modelul returnează:
+
+  * bounding boxes,
+  * clase detectate (scratch, dent, crack etc.),
+  * confidence score pentru fiecare detecție.
+* Ieșiri posibile:
+
+  * inferență reușită → **EXPORT_RESULT**;
+  * eroare GPU / model / timeout → **ERROR**.
+
+---
+
+### 🔹 EXPORT_RESULT – „Desenează bounding box-uri, salvează imaginea, afișează în UI”
+
+* Dacă `has_defect = True`:
+
+  * se desenează bounding box-uri colorate pe imagine,
+  * se salvează imaginea rezultată în `static/results/`.
+* Dacă **nu s-a detectat nicio daună**:
+
+  * se afișează un mesaj de tip *„No damage detected”*.
+* În ambele cazuri:
+
+  * se salvează un log (nume fișier, clase, scoruri, timp de procesare),
+  * se afișează rezultatul în interfața web,
+  * apoi aplicația revine în **IDLE** (pregătită pentru o nouă imagine).
+
+---
+
+### 🔹 ERROR – „Afișează mesaj de eroare, salvează log incident”
+
+* Gestionează situații precum:
+
+  * fișier corupt / format neacceptat,
+  * eroare de inferență (model, GPU, memorie etc.).
+* Utilizatorul vede un mesaj clar în UI (ex. „Fișier invalid” sau „Eroare la model”).
+* Se salvează un log de incident pentru debugging.
+* Din această stare se poate reveni în **IDLE**, pentru a încerca o altă imagine.
+
+---
+
+### 🔹 STOP – „Oprire aplicație / eliberare resurse”
+
+* Reprezintă oprirea controlată a sistemului:
+
+  * se eliberează resursele (GPU, fișiere temporare etc.),
+  * se oprește serverul Flask.
+* În practică este declanșată de închiderea aplicației sau oprirea serverului.
+
+---
+
+### 8.3. Justificarea State Machine-ului ales
+
+Am modelat aplicația ca un **State Machine de tip clasificare imagini la cererea utilizatorului**, pentru că proiectul urmărește un flux clar: *user upload → preprocesare → inferență RN → afișare rezultat → logging / eroare*.
+
+Stările principale (IDLE, ENHANCE_IMAGE, VALIDATE_IMAGE, PROCESS_IMAGE, EXPORT_RESULT, ERROR, STOP) acoperă:
+
+1. **Pregătirea datelor** (upload + enhance + validare),
+2. **Inferența RN** (YOLO11m pe imaginea procesată),
+3. **Gestionarea ieșirilor** (rezultat sau eroare),
+4. **Gestionarea ciclului de viață al aplicației** (IDLE/STOP).
+
+Tranzițiile critice sunt:
+
+* `IDLE → ENHANCE_IMAGE` – când utilizatorul încarcă o imagine validă.
+* `VALIDATE_IMAGE → PROCESS_IMAGE` – doar după ce imaginea trece toate verificările.
+* `PROCESS_IMAGE → EXPORT_RESULT` – când inferența YOLO se termină cu succes.
+* `PROCESS_IMAGE → ERROR` – când apare o eroare de model / GPU / timeout.
+* `ERROR → IDLE` – utilizatorul poate relua procesul cu o nouă imagine.
+
+Starea **ERROR** este esențială pentru că în practică pot apărea fișiere corupte, formate neacceptate sau probleme de resurse (GPU, memorie). Sistemul trebuie să trateze aceste cazuri controlat și să permită reluarea normală a fluxului.
+
+---
+
+# 🏭 9. Tabel Nevoie Reală → Soluție SIA → Modul Software
+
+| Nevoie reală concretă                 | Cum o rezolvă SIA-ul (metrici/efect)                                             | Modul software responsabil          |
+| ------------------------------------- | -------------------------------------------------------------------------------- | ----------------------------------- |
+| Detectarea rapidă a daunelor auto     | YOLO11m rulează inferența pe o imagine în **< 1s**, returnând clase + scoruri    | Modul NN – YOLO Inference Engine    |
+| Vizibilitate mai bună a daunelor      | Filtre ENHANCE cresc contrastul / claritatea și reduc zgomotul înainte de RN     | Modul de Preprocesare (ENHANCE)     |
+| Procesare robustă a imaginilor        | VALIDATE_IMAGE respinge fișiere corupte / cu rezoluție mică, evitând erorile RN  | Modul Validator + Enhancer          |
+| Export + trasabilitate a rezultatelor | Fiecare analiză generează imagine finală + log JSON/CSV → **100% cazuri logate** | Modul Exporter + Logger (UI + back) |
+
+---
+
+# 🔢 10. Contribuția originală la setul de date (Etapa 4 RN)
+
+Pentru a respecta cerința de **minimum 40% date originale**, proiectul include un modul dedicat de generare de imagini sintetice cu daune auto.
+
+### Contribuția originală la setul de date
+
+**Total observații finale:** 4000 imagini (train + val + test)
+**Observații originale:** ~1600 imagini (≈ 40%)
+
+**Tipul contribuției:**
+
+* ✅ Date generate prin simulare fizică / imagini sintetice cu daune
+* ⬜ Date achiziționate cu senzori proprii
+* ⬜ Etichetare/adnotare manuală
+* ⬜ Alte surse
+
+**Descriere detaliată:**
+
+Imaginile originale sunt generate pornind de la poze cu mașini fără daune sau cu daune minore, peste care se aplică, programatic:
+
+* **zgârieturi sintetice** (texturi de scratch, linii subțiri cu variații de culoare și grosime),
+* **îndoiri și crăpături simulate** prin deformări locale și overlay-uri de pattern-uri,
+* **noise + blur + variații de iluminare**, pentru a simula condiții reale (noapte, ploaie, camere diferite).
+
+Aceste transformări nu sunt simple augmentări (rotiri/flip), ci **simulează fizic apariția unor defecte noi**, generând imagini care nu există în datasetul public CarDD.
+
+Imagistica rezultată este folosită atât la antrenare, cât și la testare, crescând diversitatea tipurilor de daune și generalizarea modelului YOLO.
+
+**Locația codului:**
+`src/data_acquisition/generate_synthetic_damage_data.py`
+
+**Locația datelor:**
+`data/generated/`
+
+---
+
+# 🧱 11. Arhitectura SIA și modulele software (Etapa 4)
+
+Arhitectura urmează modelul cu **3 module principale** cerut la curs:
+
+---
+
+## 11.1. Modul 1 – Data Acquisition / Generare Date
+
+**Rol:**
+
+* generează imagini sintetice cu daune auto,
+* produce log-uri CSV cu metadata (tip defect, intensitate, parametri de simulare).
+
+**Responsabilități:**
+
+* rulează scriptul:
+  `python src/data_acquisition/generate_synthetic_damage_data.py`
+* salvează imaginile noi în `data/generated/`
+* salvează `data/generated/metadata.csv` cu coloane de tip:
+  `filename, scratch_level, dent_level, noise_level, brightness, ...`
+
+Acest modul acoperă partea de **contribuție originală 40%**.
+
+---
+
+## 11.2. Modul 2 – Neural Network (YOLO11m)
+
+**Rol:**
+
+* definește și încarcă modelul YOLO11m,
+* rulează inferența pe imaginile preprocesate.
+
+**Fișiere cheie:**
+
+* `src/neural_network/train_yolo11.py` – script de definire + antrenare YOLO
+* `models/yolo11-base.pt` – model neantrenat (schelet RN pentru Etapa 4)
+* `models/yolo11-cardd.pt` – model antrenat pe CarDD + generated
+
+**Funcționalități:**
+
+* configurare parametri (`epochs`, `imgsz`, `batch`)
+* integrare augmentări avansate
+* salvare / încărcare model
+* API de inferență folosit de aplicația web.
+
+---
+
+## 11.3. Modul 3 – Web Service / UI (Flask)
+
+**Rol:**
+
+* oferă interfața cu utilizatorul,
+* orchestrează pipeline-ul end-to-end.
+
+**Fișiere cheie:**
+
+* `src/web/app.py` – server Flask
+* `src/web/templates/index.html` – UI
+* `src/web/static/style.css` – stilizare
+* `docs/screenshots/ui_demo.png` – screenshot interfață
+
+**Flux:**
+
+1. Utilizatorul încarcă o imagine (endpoint `/upload`).
+2. Backend-ul salvează fișierul în `static/uploads/`.
+3. Se rulează modul ENHANCE + VALIDATE.
+4. Se apelează YOLO (modul NN).
+5. Rezultatul (bounding box-uri + scoruri) este desenat și salvat în `static/results/`.
+6. UI afișează comparativ input / output.
+
+---
+
+# 📝 12. Concluzii
+
+Acest proiect demonstrează:
+
+* utilizarea YOLO11m pe un dataset real (CarDD), extins cu **date originale sintetice**;
+* preprocesare avansată prin ENHANCE pentru imagini cu calitate variabilă;
+* detecție rapidă și precisă a daunelor auto;
+* interfață web complet funcțională (upload → analiză → rezultat);
+* State Machine industrial pentru flux autonom și gestionarea erorilor;
+* arhitectură SIA cu 3 module (Data Acquisition, Neural Network, Web UI) conform cerințelor Etapa 4;
+* logging complet pentru fiecare caz analizat, cu posibilitate de audit și analiză ulterioară.
+
+---
+
+# 👤 13. Autori
+
+* **Baba Cristian-Teodor** – Student FIIR, UPB
+
+<details>
+<summary><strong>14. Diferențe față de versiunea anterioară a documentației (P3)</strong></summary>
+
+<br>
+
+Această secțiune prezintă, într-o manieră sintetică și academică, principalele diferențe dintre versiunea curentă a documentației și versiunea anterioară (P2), din perspectiva cerințelor Etapei 4 (Sisteme Informatice Autonome).
+
+---
+
+### 14.1. Extinderea cadrului arhitectural
+
+În versiunea P2, documentația se concentra preponderent pe modelul YOLO și pe interfața web.  
+Versiunea actuală introduce explicit:
+
+- arhitectura în **trei module principale** (Data Acquisition, Neural Network, Web Service/UI);
+- descrierea responsabilităților fiecărui modul în cadrul SIA;
+- relațiile dintre module și rolul lor în fluxul complet al aplicației.
+
+---
+
+### 14.2. Introducerea modulului de Data Acquisition și a contribuției originale la dataset
+
+Versiunea anterioară utiliza exclusiv dataset-ul CarDD.  
+Versiunea actuală a documentației:
+
+- introduce un modul de **Data Acquisition** și directorul `data/generated/`;
+- descrie generarea de **date sintetice** (imagini cu daune simulate);
+- clarifică faptul că aceste date reprezintă aproximativ **40% contribuție originală** la setul de date utilizat.
+
+---
+
+### 14.3. Modelarea comportamentului printr-un State Machine
+
+Versiunea P2 nu conținea un model formal al comportamentului sistemului.  
+Versiunea curentă include:
+
+- diagrama mașinii de stări (`docs/state_machine_car_damage.png`);
+- definirea stărilor principale (IDLE, ENHANCE_IMAGE, VALIDATE_IMAGE, PROCESS_IMAGE, EXPORT_RESULT, ERROR, STOP);
+- descrierea tranzițiilor dintre stări și justificarea utilizării unei mașini de stări finite pentru organizarea fluxului.
+
+---
+
+### 14.4. Detalierea fluxului de procesare cu etape suplimentare
+
+În versiunea anterioară, fluxul era descris succint: upload → inferență → afișare rezultat.  
+În versiunea actuală sunt introduse și documentate explicit:
+
+- etapa **ENHANCE_IMAGE** (filtre de contrast, claritate, denoise);
+- etapa **VALIDATE_IMAGE** (verificarea formatului, rezoluției, integrității fișierului);
+- tratarea sistematică a situațiilor de eroare prin starea **ERROR**;
+- revenirea controlată în starea **IDLE** după finalizarea sau eșecul unei analize.
+
+---
+
+### 14.5. Consolidarea structurii proiectului
+
+Structura proiectului a fost extinsă astfel încât să reflecte cerințele Etapei 4:
+
+- adăugarea directoarelor `docs/`, `data/generated/`, respectiv `src/data_acquisition/`;
+- includerea unui model neantrenat ca schelet RN (în directorul `models/`);
+- integrarea elementelor de logging și a metadatelor asociate procesului de achiziție și prelucrare a datelor.
+
+---
+
+### 14.6. Introducerea tabelului „Nevoie reală → Soluție SIA → Modul software”
+
+Versiunea P2 nu conținea o mapare formală între nevoile din domeniul real și soluțiile implementate.  
+Versiunea actuală include un tabel dedicat care:
+
+- formulează nevoile reale (ex. detecție rapidă a daunelor, robusteză la imagini de calitate scăzută);
+- explică soluția SIA (ex. YOLO11m, filtre ENHANCE, validare imagini);
+- indică modulul software responsabil pentru fiecare nevoie.
+
+---
+
+### 14.7. Clarificarea caracterului de Sistem Inteligent Autonom (SIA)
+
+În versiunea anterioară, caracterul de SIA era implicit.  
+Versiunea actuală explicitează:
+
+- autonomia fluxului de procesare (de la input la output, inclusiv tratarea erorilor);
+- integrarea mașinii de stări în logica de control;
+- separarea responsabilităților pe module, conform arhitecturii tipice pentru un SIA.
+
+---
+
+### 14.8. Actualizarea concluziilor pentru a reflecta noile componente
+
+Concluziile au fost extinse pentru a include:
+
+- mențiuni explicite privind contribuția originală la setul de date;
+- referiri la State Machine și la organizarea modulară;
+- referiri la respectarea cerințelor Etapei 4 (SIA/RN) prin implementarea arhitecturii propuse.
+
+---
+
+Prin aceste modificări, documentația curentă nu doar descrie funcționalitatea sistemului de detecție a daunelor auto, ci și poziționează proiectul într-un cadru arhitectural specific Sistemelor Informatice Autonome, conform cerințelor academice ale Etapei 4.
+
+</details>
+
