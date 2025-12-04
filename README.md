@@ -477,134 +477,104 @@ Acest proiect demonstrează:
 # 👤 13. Autori
 
 * **Baba Cristian-Teodor** – Student FIIR, UPB
-* 
-🔬 14. Diferențe față de versiunea anterioară a documentației (raport academic)
 
-Această secțiune prezintă în mod structurat și academic modificările aduse documentației și arhitecturii proiectului, comparativ cu versiunea precedentă (README – P2) , în vederea conformării proiectului la cerințele Etapei 4 din cadrul disciplinei.
+* <details>
+<summary><strong>14. Diferențe față de versiunea anterioară a documentației (P2)</strong></summary>
 
-14.1. Extinderea cadrului conceptual și arhitectural
+<br>
 
-Versiunea anterioară documenta doar mecanismele de detecție și funcționarea interfeței web.
-Versiunea actualizată include:
+Această secțiune prezintă, într-o manieră sintetică și academică, principalele diferențe dintre versiunea curentă a documentației și versiunea anterioară (P2), din perspectiva cerințelor Etapei 4 (Sisteme Informatice Autonome).
 
-introducerea modelării sistemului conform paradigmei SIA (Sisteme Informatice Autonome);
+---
 
-definirea arhitecturii în trei module principale (Data Acquisition, Neural Network, Web Service), conform cerințelor Etapei 4;
+### 14.1. Extinderea cadrului arhitectural
 
-prezentarea responsabilităților fiecărui modul și a relațiilor dintre acestea într-o manieră formală.
+În versiunea P2, documentația se concentra preponderent pe modelul YOLO și pe interfața web.  
+Versiunea actuală introduce explicit:
 
-Aceste elemente nu erau prezente în versiunea P2.
+- arhitectura în **trei module principale** (Data Acquisition, Neural Network, Web Service/UI);
+- descrierea responsabilităților fiecărui modul în cadrul SIA;
+- relațiile dintre module și rolul lor în fluxul complet al aplicației.
 
-14.2. Integrarea unui modul de Data Acquisition și asigurarea contribuției originale la setul de date
+---
 
-Versiunea inițială descria exclusiv utilizarea dataset-ului CarDD.
-Versiunea actuală introduce:
+### 14.2. Introducerea modulului de Data Acquisition și a contribuției originale la dataset
 
-un modul nou: src/data_acquisition/,
+Versiunea anterioară utiliza exclusiv dataset-ul CarDD.  
+Versiunea actuală a documentației:
 
-generarea de date sintetice pentru acoperirea cerinței de minimum 40% contribuție originală la baza de date,
+- introduce un modul de **Data Acquisition** și directorul `data/generated/`;
+- descrie generarea de **date sintetice** (imagini cu daune simulate);
+- clarifică faptul că aceste date reprezintă aproximativ **40% contribuție originală** la setul de date utilizat.
 
-documentarea metodologiei de generare a datelor (texturi artificiale de zgârieturi, deformări simulate, perturbări de iluminare).
+---
 
-Această componentă metodologică nu exista în versiunea anterioară.
+### 14.3. Modelarea comportamentului printr-un State Machine
 
-14.3. Introducerea și detalierea unui State Machine operațional
+Versiunea P2 nu conținea un model formal al comportamentului sistemului.  
+Versiunea curentă include:
 
-Versiunea P2 nu conținea o descriere formală a comportamentului sistemului.
+- diagrama mașinii de stări (`docs/state_machine_car_damage.png`);
+- definirea stărilor principale (IDLE, ENHANCE_IMAGE, VALIDATE_IMAGE, PROCESS_IMAGE, EXPORT_RESULT, ERROR, STOP);
+- descrierea tranzițiilor dintre stări și justificarea utilizării unei mașini de stări finite pentru organizarea fluxului.
 
-Versiunea actuală include:
+---
 
-o diagramă oficială a mașinii de stări: docs/state_machine_car_damage.png,
+### 14.4. Detalierea fluxului de procesare cu etape suplimentare
 
-descrierea formală a fiecărei stări (IDLE, ENHANCE_IMAGE, VALIDATE_IMAGE, PROCESS_IMAGE, EXPORT_RESULT, ERROR, STOP),
+În versiunea anterioară, fluxul era descris succint: upload → inferență → afișare rezultat.  
+În versiunea actuală sunt introduse și documentate explicit:
 
-modelarea tranzițiilor între stări și justificarea utilizării modelului finit de stări în arhitectura unui SIA.
+- etapa **ENHANCE_IMAGE** (filtre de contrast, claritate, denoise);
+- etapa **VALIDATE_IMAGE** (verificarea formatului, rezoluției, integrității fișierului);
+- tratarea sistematică a situațiilor de eroare prin starea **ERROR**;
+- revenirea controlată în starea **IDLE** după finalizarea sau eșecul unei analize.
 
-Această componentă este esențială pentru Etapa 4 și a fost adăugată integral.
+---
 
-14.4. Completarea fluxului de procesare cu etape suplimentare neincluse anterior
+### 14.5. Consolidarea structurii proiectului
 
-Versiunea actualizată prezintă pentru prima dată următoarele etape:
+Structura proiectului a fost extinsă astfel încât să reflecte cerințele Etapei 4:
 
-ENHANCE_IMAGE: aplicarea automată de filtre (contrast, claritate, denoise),
+- adăugarea directoarelor `docs/`, `data/generated/`, respectiv `src/data_acquisition/`;
+- includerea unui model neantrenat ca schelet RN (în directorul `models/`);
+- integrarea elementelor de logging și a metadatelor asociate procesului de achiziție și prelucrare a datelor.
 
-VALIDATE_IMAGE: verificarea strictă a formatului, rezoluției și integrității imaginii,
+---
 
-gestionarea sistematică a excepțiilor prin starea ERROR,
+### 14.6. Introducerea tabelului „Nevoie reală → Soluție SIA → Modul software”
 
-normalizarea fluxului în cadrul State Machine-ului.
+Versiunea P2 nu conținea o mapare formală între nevoile din domeniul real și soluțiile implementate.  
+Versiunea actuală include un tabel dedicat care:
 
-Versiunea anterioară documenta doar încărcarea imaginii, inferența YOLO și afișarea rezultatului, fără un control riguros al fluxului.
+- formulează nevoile reale (ex. detecție rapidă a daunelor, robusteză la imagini de calitate scăzută);
+- explică soluția SIA (ex. YOLO11m, filtre ENHANCE, validare imagini);
+- indică modulul software responsabil pentru fiecare nevoie.
 
-14.5. Consolidarea arhitecturii software și extinderea structurii proiectului
+---
 
-Structura proiectului a fost extinsă pentru a reflecta cerințele academice:
+### 14.7. Clarificarea caracterului de Sistem Inteligent Autonom (SIA)
 
-introducerea directoarelor docs/, data/generated/,
+În versiunea anterioară, caracterul de SIA era implicit.  
+Versiunea actuală explicitează:
 
-introducerea modelului neantrenat necesar Etapei 4 (schelet RN),
+- autonomia fluxului de procesare (de la input la output, inclusiv tratarea erorilor);
+- integrarea mașinii de stări în logica de control;
+- separarea responsabilităților pe module, conform arhitecturii tipice pentru un SIA.
 
-adăugarea fișierelor de logging și metadate specifice procesului de achiziție de date.
+---
 
-Versiunea P2 includea doar modulele YOLO și Web UI.
+### 14.8. Actualizarea concluziilor pentru a reflecta noile componente
 
-14.6. Introducerea unei secțiuni formale Nevoie reală → Soluție CPS → Modul software
+Concluziile au fost extinse pentru a include:
 
-În versiunea anterioară nu exista o corelare explicită între:
+- mențiuni explicite privind contribuția originală la setul de date;
+- referiri la State Machine și la organizarea modulară;
+- referiri la respectarea cerințelor Etapei 4 (SIA/RN) prin implementarea arhitecturii propuse.
 
-nevoia concretă din mediul real,
+---
 
-soluția tehnică implementată,
+Prin aceste modificări, documentația curentă nu doar descrie funcționalitatea sistemului de detecție a daunelor auto, ci și poziționează proiectul într-un cadru arhitectural specific Sistemelor Informatice Autonome, conform cerințelor academice ale Etapei 4.
 
-modulul software responsabil.
+</details>
 
-Versiunea actuală introduce un tabel completat conform metodologiei SIA, prezentând:
-
-criteriile de performanță,
-
-funcțiile sistemului,
-
-acoperirea modulară a fiecărei nevoi.
-
-14.7. Clarificarea contribuției la nivel de sistem autonom
-
-Versiunea actuală documentează explicit:
-
-independența operațională a sistemului,
-
-capacitatea de prelucrare autonomă a input-urilor,
-
-gestionarea stărilor interne,
-
-reluarea fluxului după erori,
-reconfirmând caracterul de Sistem Informatic Autonom, cerință absentă în versiunea anterioară.
-
-14.8. Extinderea concluziilor pentru conformitate academică
-
-Concluziile au fost reformulate:
-
-pentru a reflecta modularitatea sistemului,
-
-pentru a evidenția contribuția originală asupra dataset-ului,
-
-pentru a integra rolul State Machine-ului în arhitectura finală,
-
-pentru a corespunde structurii cerute în Etapa 4.
-
-✔ Rezumat academic al diferențelor
-
-În ansamblu, versiunea actuală a documentației:
-
-respectă integral cerințele Etapei 4 din disciplina SIA/RN,
-
-include arhitectura modulară completă,
-
-integrează contribuția originală la dataset,
-
-introduce o modelare formală prin State Machine,
-
-oferă o prezentare riguroasă a fluxului informațional,
-
-extinde structura proiectului la nivelul cerut de un SIA real,
-
-documentează sistemul la un nivel academic mult superior versiunii anterioare.
