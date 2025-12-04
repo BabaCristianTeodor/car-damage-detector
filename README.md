@@ -1,4 +1,3 @@
-````markdown
 <div align="center">
 
 <h1>🚗 Car Damage Detector</h1>
