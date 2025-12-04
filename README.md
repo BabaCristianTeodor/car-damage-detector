@@ -1,8 +1,3 @@
-Perfect, hai să îl adaptăm direct la cerințele noi, dar păstrând TOT ce ai deja și făcând să aibă sens pentru prof.
-
-Mai jos ai **README-ul complet, cap-coadă**, actualizat pentru Etapa 4 (SIA), gata de paste în `README.md` sau în `README_Etapa4_Arhitectura_SIA.md` dacă vrei să faci un fișier separat.
-
-````markdown
 <div align="center">
 
 <h1>🚗 Car Damage Detector</h1>
