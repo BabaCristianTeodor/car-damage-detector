@@ -212,7 +212,7 @@ Bounding box-uri sau mesaj „No damage detected”.
 
 ## 8.1. Diagrama grafică
 
-![Image Alt]([image_url](https://github.com/BabaCristianTeodor/car-damage-detector/blob/dc8b8521cd132bc2d1f1e65abfa6613ad53e29b2/docs/state_machine_car_damage.png))
+![State Machine – Car Damage Detector](https://raw.githubusercontent.com/BabaCristianTeodor/car-damage-detector/dc8b8521cd132bc2d1f1e65abfa6613ad53e29b2/docs/state_machine_car_damage.png)
 
 ---
 
