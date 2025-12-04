@@ -479,7 +479,7 @@ Acest proiect demonstrează:
 * **Baba Cristian-Teodor** – Student FIIR, UPB
 
 <details>
-<summary><strong>14. Diferențe față de versiunea anterioară a documentației (P2)</strong></summary>
+<summary><strong>14. Diferențe față de versiunea anterioară a documentației (P3)</strong></summary>
 
 <br>
 
