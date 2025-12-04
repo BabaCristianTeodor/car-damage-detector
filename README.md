@@ -1,13 +1,3 @@
-Ok, hai să-l curățăm complet. Mai jos ai **README-ul cap–coadă**, reparat:
-
-* structură de titluri corectă
-* blocul cu structura proiectului pus în ```
-* fără „yaml / Copy code” rătăcite
-* poza diagramei randată corect: `docs/state_machine_car_damage.png`
-* descrierea stărilor scrisă ca markdown, nu text „în aer”
-
-Doar copiezi TOT blocul de mai jos în `README.md`.
-
 ````markdown
 <div align="center">
 
