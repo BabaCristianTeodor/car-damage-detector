@@ -216,41 +216,7 @@ Bounding box-uri sau mesaj „No damage detected”.
 
 > 📌 Imaginea de mai jos este diagrama finală a fluxului aplicației (State Machine).
 
-```markdown
-![State Machine – Car Damage Detector](docs/state_machine_car_damage.png)
-👉 Salvează imaginea ta în docs/state_machine_car_damage.png
-sau schimbă calea cu numele fișierului real.
 
-8.2. Variantă Mermaid (opțional, randabilă direct în GitHub)
-mermaid
-Copy code
-stateDiagram-v2
-    direction TB
-
-    [*] --> IDLE
-
-    IDLE : Așteaptă încărcare imagine<br/>de la utilizator
-    IDLE --> ENHANCE_IMAGE : fișier încărcat
-
-    ENHANCE_IMAGE : Aplică filtre de enhance<br/>contrast / claritate / denoise<br/>pregătește imaginea pentru analiză
-    ENHANCE_IMAGE --> VALIDATE_IMAGE : imagine procesată
-
-    VALIDATE_IMAGE : Verifică format<br/>rezoluție și dimensiune minimă
-    VALIDATE_IMAGE --> PROCESS_IMAGE : imagine validă
-    VALIDATE_IMAGE --> ERROR : fișier corupt<br/>sau format invalid
-
-    PROCESS_IMAGE : Rulează inferența YOLO<br/>has_defect = model(img)
-    PROCESS_IMAGE --> EXPORT_RESULT : inferență OK
-    PROCESS_IMAGE --> ERROR : eroare RN<br/>sau timeout GPU
-
-    EXPORT_RESULT : Desenează bounding box-uri (dacă există)<br/>sau mesaj „fără daune”<br/>Salvează imaginea procesată<br/>Actualizează log rezultat<br/>Afișează rezultatul în UI
-    EXPORT_RESULT --> IDLE : export finalizat<br/>gata pentru o nouă imagine
-
-    ERROR : Afișează mesaj de eroare<br/>Salvează log incident
-    ERROR --> IDLE : reset<br/>utilizatorul poate încerca din nou
-
-    STOP : Oprire aplicație<br/>Eliberare resurse
-    STOP --> [*]
 8.3. Descrierea stărilor și tranzițiilor din diagramă
 🔹 Așteaptă încărcare imagine de la utilizator (IDLE)
 
