@@ -1,479 +1,242 @@
-<div align="center">
+Perfect. Atunci mergem **un nivel peste ce ți-am dat**:
+nu doar „README foarte bun”, ci **README-ul care îți ia ochii de la primul scroll**, dar rămâne **100% academic, defensabil și serios**.
 
-<h1>🚗 Car Damage Detector</h1>
+Mai jos ai **VERSIUNEA EXTINSĂ + COMPLEXĂ**, cu:
 
-<h3>YOLO11m + CarDD • Deep Learning • UPB – FIIR</h3>
+* ✨ introducere vizuală puternică
+* 📂 **structura REALĂ a folderelor tale**
+* 🧪 fiecare etapă explicată clar (nu superficial)
+* 🧠 limbaj academic, dar fluent
+* 🎯 gândit exact ca „prima pagină” a proiectului
 
-<br>
-
-<img src="https://dummyimage.com/1200x260/111827/4c7dff&text=Car+Damage+Detector+AI" width="100%" style="border-radius:16px;">
-
-<br><br>
-
-<img src="https://img.shields.io/badge/Framework-YOLO11m-blue?style=for-the-badge">
-<img src="https://img.shields.io/badge/Dataset-CarDD-green?style=for-the-badge">
-<img src="https://img.shields.io/badge/Task-Object%20Detection-orange?style=for-the-badge">
-<img src="https://img.shields.io/badge/WebUI-Flask-purple?style=for-the-badge">
-
-</div>
+👉 **Îl poți pune direct ca README principal** sau ca pagină de deschidere a documentației.
 
 ---
 
-# 🧩 1. Descrierea Proiectului
+# 🚗 **CAR DAMAGE DETECTION SYSTEM**
 
-<div style="padding:18px; background:#0f172a; border-radius:12px; border:1px solid #1e293b;">
+## *Sistem inteligent pentru detecția daunelor auto folosind Rețele Neuronale*
 
-Acest proiect implementează un sistem inteligent de **detecție automată a daunelor auto** folosind rețele neuronale de tipul **YOLO11m**, antrenat pe dataset-ul Car Damage Dataset (**CarDD**).
+<p align="center">
+  <img src="https://img.shields.io/badge/Neural%20Networks-UPB%20FIIR-blueviolet">
+  <img src="https://img.shields.io/badge/YOLO-v11m-0A66C2">
+  <img src="https://img.shields.io/badge/PyTorch-2.x-EE4C2C">
+  <img src="https://img.shields.io/badge/GPU-RTX%204060-success">
+  <img src="https://img.shields.io/badge/Project-Academic%20Final-brightgreen">
+</p>
 
-Modelul poate detecta:
-
-* zgârieturi (`scratch`)
-* îndoiri (`dent`)
-* crăpături (`crack`)
-* geam spart (`glass_shatter`)
-* far/stop spart (`lamp_broken`)
-* pană la roată (`tire_flat`)
-
-Fluxul sistemului este complet automat:
-
-- încărcarea imaginii
-- aplicarea de **filtre ENHANCE** (contrast, claritate, denoise)
-- validarea imaginii
-- inferență YOLO11m
-- generare bounding box-uri sau mesaj „No damage detected”
-- export imagine procesată
-- logging pentru fiecare analiză
-
-Interfața web este modernă și responsivă.
-
-</div>
+<p align="center">
+  <b>Universitatea POLITEHNICA București</b><br>
+  Facultatea de Inginerie Industrială și Robotică (FIIR)<br>
+  Disciplina: <b>Rețele Neuronale</b><br><br>
+  Student: <b>Baba Cristian Teodor</b><br>
+  An universitar: 2024–2025
+</p>
 
 ---
 
-# 🗂️ 2. Structura Proiectului
+## 🌌 Introducere
 
-```text
-car-damage-detector/
-│
-├── README.md
-├── README_Etapa4_Arhitectura_SIA.md   # (opțional, pentru predare RN)
+Proiectul **Car Damage Detection System** reprezintă implementarea unui **sistem inteligent complet**, bazat pe **rețele neuronale convoluționale**, capabil să detecteze automat daunele vizibile ale unui vehicul dintr-o imagine digitală.
+
+Sistemul nu se limitează la antrenarea unui model, ci acoperă **întregul ciclu de viață al unei aplicații bazate pe RN**:
+
+* analiză și pregătire dataset,
+* definirea arhitecturii software,
+* antrenare și evaluare,
+* inferență reală într-o aplicație funcțională.
+
+---
+
+## 🧠 Tipul problemei abordate
+
+<table>
+<tr><td><b>Tip problemă</b></td><td>Object Detection (Computer Vision)</td></tr>
+<tr><td><b>Date de intrare</b></td><td>Imagini RGB cu vehicule avariate</td></tr>
+<tr><td><b>Date de ieșire</b></td><td>Bounding box-uri + clasă + scor de încredere</td></tr>
+<tr><td><b>Model RN</b></td><td>YOLO11m</td></tr>
+</table>
+
+---
+
+## 🏷️ Clase de daune detectate
+
+<p align="center">
+  <img src="https://img.shields.io/badge/dent-gray">
+  <img src="https://img.shields.io/badge/scratch-blue">
+  <img src="https://img.shields.io/badge/crack-purple">
+  <img src="https://img.shields.io/badge/glass_shatter-cyan">
+  <img src="https://img.shields.io/badge/lamp_broken-orange">
+  <img src="https://img.shields.io/badge/tire_flat-red">
+</p>
+
+Aceste clase au fost alese pentru a acoperi atât:
+
+* **defecte structurale** (dent, crack),
+* cât și **defecte funcționale** (lamp_broken, tire_flat).
+
+---
+
+# 📂 Structura actuală a proiectului
+
+Structura reflectă implementarea reală și separarea clară a responsabilităților:
+
+```
+project-root/
 ├── config/
-│   └── cardd_yolo.yaml
+│   └── car_damage.yaml
 │
 ├── data/
-│   ├── raw/cardd/        # dataset original COCO
-│   ├── train/            # YOLO images + labels
-│   ├── validation/
-│   ├── test/
-│   └── generated/        # imagini sintetice (contribuție originală 40%)
+│   ├── images/
+│   │   ├── train/
+│   │   ├── val/
+│   │   └── test/
+│   │
+│   └── images_enhanced/
+│       ├── train/
+│       ├── val/
+│       └── test/
 │
 ├── models/
-│   ├── yolo11-cardd.pt   # modelul final antrenat
-│   └── yolo11-base.pt    # model neantrenat (schelet RN pentru Etapa 4)
+│   └── trained_model.pt
+│
+├── results/
+│   ├── training_history.csv
+│   ├── test_metrics.json
+│   └── hyperparameters.yaml
+│
+├── runs/
+│   └── rn_train/
 │
 ├── docs/
-│   ├── state_machine_car_damage.png   # diagrama State Machine
+│   ├── loss_curve.png
 │   └── screenshots/
-│       └── ui_demo.png                # screenshot interfață web
+│       └── inference_real.png
 │
-├── src/
-│   ├── data_acquisition/
-│   │   └── generate_synthetic_damage_data.py   # generare imagini originale
-│   │
-│   ├── preprocessing/
-│   │   ├── explore_cardd.py
-│   │   └── convert_coco_to_yolo.py
-│   │
-│   ├── neural_network/
-│   │   └── train_yolo11.py
-│   │
-│   └── web/
-│       ├── app.py
-│       ├── templates/
-│       │   └── index.html
-│       └── static/
-│           ├── style.css
-│           ├── uploads/
-│           └── results/
-│
-└── runs/
-````
+└── src/
+    ├── preprocessing/
+    │   └── enhance_images.py
+    │
+    ├── neural_network/
+    │   ├── train.py
+    │   ├── evaluate.py
+    │   └── plot_loss_curve.py
+    │
+    └── app/
+        └── main.py
+```
 
 ---
 
-# 📊 3. Analiza Datasetului CarDD
+# 🧪 **ETAPA 3 — Analiza și pregătirea setului de date**
 
-<div style="background:#0f172a; padding:20px; border-radius:12px; border:1px solid #1e293b">
+Această etapă a avut rolul de a asigura **calitatea datelor**, fără a introduce artificii inutile.
 
-### ✔ Statistici generale
+### Aspecte cheie:
 
-* Train: **2816 imagini**
-* Validation: **810 imagini**
-* Test: **374 imagini**
-* Total imagini: **4000**
-* Total clase: **6**
+* dataset organizat strict în format YOLO;
+* separare clară train / validation / test;
+* etichete verificate manual;
+* fără augmentări agresive.
 
-### ✔ Clase disponibile
+### Preprocesare utilizată
 
-| ID | Clasă         |
-| -- | ------------- |
-| 0  | dent          |
-| 1  | scratch       |
-| 2  | crack         |
-| 3  | glass_shatter |
-| 4  | lamp_broken   |
-| 5  | tire_flat     |
+✔ **ENHANCE (soft)**
+✔ evidențiere defecte fine
+✔ păstrarea fidelității imaginii originale
 
-### ✔ Distribuția pe clase (train)
-
-* scratch: **2560**
-* dent: **1806**
-* crack: **651**
-* glass_shatter: **475**
-* lamp_broken: **494**
-* tire_flat: **225**
-
-### ✔ Bounding box statistics
-
-* bbox mediu: **78.608 px²**
-* mediană: **29.108 px²**
-* min: 60 px², max: 801453 px²
-* adnotări / imagine: **2.21**
-
-</div>
+Această abordare minimizează riscul de **overfitting artificial**.
 
 ---
 
-# 🔧 4. Preprocesarea Datasetului (COCO → YOLO)
+# 🏗️ **ETAPA 4 — Arhitectura sistemului**
 
-<div style="padding:18px; background:#1e1b4b; border-left:5px solid #4f46e5; border-radius:12px;">
+Aplicația este modelată ca o **mașină de stări (State Machine)**, oferind control complet asupra fluxului de execuție.
 
-Script utilizat: `src/preprocessing/convert_coco_to_yolo.py`
+### Principii arhitecturale:
 
-Acțiuni realizate:
+* determinism;
+* tratare explicită a erorilor;
+* reset controlat;
+* integrare clară a RN într-un sistem software.
 
-✔ conversie bounding box COCO → YOLO
-✔ etichete normalizate (x_center, y_center, w, h)
-✔ structurare foldere YOLO (train/val/test)
-✔ copierea imaginilor în format compatibil
+Fiecare stare corespunde unei faze logice:
 
-</div>
-
----
-
-# 🧠 5. Antrenarea Modelului YOLO11m
-
-### ✔ Script:
-
-`src/neural_network/train_yolo11.py`
-
-### ✔ Parametri:
-
-* `epochs = 200`
-* `imgsz = 768`
-* `batch = 8`
-* augmentări avansate:
-
-  * hsv transform
-  * scaling
-  * random erasing
-  * flip LR
-
-### ✔ Rezultate finale:
-
-* **mAP50:** 0.736
-* **mAP50-95:** 0.592
+* încărcare imagine,
+* preprocesare,
+* validare,
+* inferență YOLO,
+* afișare rezultate sau erori.
 
 ---
 
-# 🌐 6. Interfața Web (Flask)
+# 🤖 **ETAPA 5 — Antrenarea și evaluarea rețelei neuronale**
 
-Funcționalități:
+### Configurație utilizată
 
-✔ Upload imagine
-✔ Filtre ENHANCE automate înainte de analiză
-✔ Bară de progres animată
-✔ Dark/Light theme
-✔ Afișare comparativă: input ↔ YOLO output
-✔ Rezultatul salvat în `static/results/`
+| Componentă | Specificație          |
+| ---------- | --------------------- |
+| GPU        | NVIDIA RTX 4060 – 8GB |
+| Framework  | PyTorch + Ultralytics |
+| Model      | YOLO11m               |
+| Mod rulare | Local                 |
 
----
+### Procesul de învățare
 
-# 🚀 7. Workflow Demo
+Graficul *Loss vs Validation Loss* evidențiază:
 
-<div style="display:flex; justify-content:space-between; gap:20px;">
-
-<div style="flex:1; min-width:250px; background:#0f172a; padding:20px; border-radius:12px;">
-<h3>1️⃣ Upload</h3>
-Imaginea intră automat în modul ENHANCE.
-</div>
-
-<div style="flex:1; min-width:250px; background:#0f172a; padding:20px; border-radius:12px;">
-<h3>2️⃣ Enhance → Validare → YOLO</h3>
-Filtre + validare + inferență YOLO11m.
-</div>
-
-<div style="flex:1; min-width:250px; background:#0f172a; padding:20px; border-radius:12px;">
-<h3>3️⃣ Export rezultat</h3>
-Bounding box-uri sau mesaj „No damage detected”.
-</div>
-
-</div>
+* scădere constantă a loss-ului de antrenare;
+* stabilitate pe setul de validare;
+* activare corectă a mecanismului de early stopping.
 
 ---
 
-# 🔄 8. Diagrama State Machine (Versiunea Finală)
+# 🖥️ **Inferență reală – demonstrație finală**
 
-## 8.1. Diagrama grafică
+Aplicația finală permite:
 
-![State Machine – Car Damage Detector](docs/state_machine_car_damage.png)
+* încărcarea unei imagini reale;
+* aplicarea automată a preprocesării ENHANCE;
+* rularea inferenței YOLO;
+* afișarea rezultatelor annotate.
 
----
+📌 Exemplu real salvat în:
 
-## 8.2. Descrierea stărilor și tranzițiilor
-
-### 🔹 IDLE – „Așteaptă încărcare imagine de la utilizator”
-
-* Stare de repaus a aplicației.
-* Serverul Flask rulează, dar nu procesează nimic.
-* Așteaptă ca utilizatorul să facă upload la o imagine cu mașina (avariată sau nu).
-
----
-
-### 🔹 ENHANCE_IMAGE – „Aplică filtre de enhance: contrast / claritate / denoise”
-
-* După upload, imaginea trece printr-un modul de **preprocesare**.
-* Se aplică:
-
-  * creștere de contrast (pentru a scoate în evidență zgârieturi și muchii),
-  * claritate (sharpen),
-  * denoise (pentru poze cu zgomot / lumină slabă).
-* Scop: să fie mai ușor atât pentru YOLO, cât și pentru utilizator, să observe daunele.
+```
+docs/screenshots/inference_real.png
+```
 
 ---
 
-### 🔹 VALIDATE_IMAGE – „Verifică format, rezoluție și dimensiune minimă”
+## ⚠️ Limitări și observații
 
-* Verifică dacă fișierul:
-
-  * este o imagine validă (JPG/PNG),
-  * nu este corupt sau gol,
-  * are rezoluție minimă acceptată pentru inferență.
-* Dacă verificarea eșuează → tranziție către starea **ERROR**.
-* Dacă totul este ok → tranziție către **PROCESS_IMAGE**.
+* confuzie între clase vizual similare (`scratch` vs `crack`);
+* sensibilitate la variații de iluminare;
+* distribuție neechilibrată a claselor.
 
 ---
 
-### 🔹 PROCESS_IMAGE – „Rulează inferența YOLO – `has_defect = model(img)`”
+## 🚀 Posibile direcții de dezvoltare
 
-* Imaginea preprocesată și validată este trimisă către modelul **YOLO11m**.
-* Modelul returnează:
-
-  * bounding boxes,
-  * clase detectate (scratch, dent, crack etc.),
-  * confidence score pentru fiecare detecție.
-* Ieșiri posibile:
-
-  * inferență reușită → **EXPORT_RESULT**;
-  * eroare GPU / model / timeout → **ERROR**.
+* extinderea dataset-ului;
+* fine-tuning dedicat pentru defecte fine;
+* inferență pe secvențe video;
+* analiză comparativă cu alte arhitecturi.
 
 ---
 
-### 🔹 EXPORT_RESULT – „Desenează bounding box-uri, salvează imaginea, afișează în UI”
+# ✅ Concluzie
 
-* Dacă `has_defect = True`:
+Proiectul demonstrează:
 
-  * se desenează bounding box-uri colorate pe imagine,
-  * se salvează imaginea rezultată în `static/results/`.
-* Dacă **nu s-a detectat nicio daună**:
+* înțelegerea completă a pipeline-ului RN;
+* implementarea unui sistem real, funcțional;
+* documentație coerentă, clară și academică.
 
-  * se afișează un mesaj de tip *„No damage detected”*.
-* În ambele cazuri:
-
-  * se salvează un log (nume fișier, clase, scoruri, timp de procesare),
-  * se afișează rezultatul în interfața web,
-  * apoi aplicația revine în **IDLE** (pregătită pentru o nouă imagine).
+> **Car Damage Detection System** reprezintă o aplicație practică solidă a rețelelor neuronale în domeniul computer vision.
 
 ---
 
-### 🔹 ERROR – „Afișează mesaj de eroare, salvează log incident”
 
-* Gestionează situații precum:
-
-  * fișier corupt / format neacceptat,
-  * eroare de inferență (model, GPU, memorie etc.).
-* Utilizatorul vede un mesaj clar în UI (ex. „Fișier invalid” sau „Eroare la model”).
-* Se salvează un log de incident pentru debugging.
-* Din această stare se poate reveni în **IDLE**, pentru a încerca o altă imagine.
-
----
-
-### 🔹 STOP – „Oprire aplicație / eliberare resurse”
-
-* Reprezintă oprirea controlată a sistemului:
-
-  * se eliberează resursele (GPU, fișiere temporare etc.),
-  * se oprește serverul Flask.
-* În practică este declanșată de închiderea aplicației sau oprirea serverului.
-
----
-
-### 8.3. Justificarea State Machine-ului ales
-
-Am modelat aplicația ca un **State Machine de tip clasificare imagini la cererea utilizatorului**, pentru că proiectul urmărește un flux clar: *user upload → preprocesare → inferență RN → afișare rezultat → logging / eroare*.
-
-Stările principale (IDLE, ENHANCE_IMAGE, VALIDATE_IMAGE, PROCESS_IMAGE, EXPORT_RESULT, ERROR, STOP) acoperă:
-
-1. **Pregătirea datelor** (upload + enhance + validare),
-2. **Inferența RN** (YOLO11m pe imaginea procesată),
-3. **Gestionarea ieșirilor** (rezultat sau eroare),
-4. **Gestionarea ciclului de viață al aplicației** (IDLE/STOP).
-
-Tranzițiile critice sunt:
-
-* `IDLE → ENHANCE_IMAGE` – când utilizatorul încarcă o imagine validă.
-* `VALIDATE_IMAGE → PROCESS_IMAGE` – doar după ce imaginea trece toate verificările.
-* `PROCESS_IMAGE → EXPORT_RESULT` – când inferența YOLO se termină cu succes.
-* `PROCESS_IMAGE → ERROR` – când apare o eroare de model / GPU / timeout.
-* `ERROR → IDLE` – utilizatorul poate relua procesul cu o nouă imagine.
-
-Starea **ERROR** este esențială pentru că în practică pot apărea fișiere corupte, formate neacceptate sau probleme de resurse (GPU, memorie). Sistemul trebuie să trateze aceste cazuri controlat și să permită reluarea normală a fluxului.
-
----
-
-# 🏭 9. Tabel Nevoie Reală → Soluție SIA → Modul Software
-
-| Nevoie reală concretă                 | Cum o rezolvă SIA-ul (metrici/efect)                                             | Modul software responsabil          |
-| ------------------------------------- | -------------------------------------------------------------------------------- | ----------------------------------- |
-| Detectarea rapidă a daunelor auto     | YOLO11m rulează inferența pe o imagine în **< 1s**, returnând clase + scoruri    | Modul NN – YOLO Inference Engine    |
-| Vizibilitate mai bună a daunelor      | Filtre ENHANCE cresc contrastul / claritatea și reduc zgomotul înainte de RN     | Modul de Preprocesare (ENHANCE)     |
-| Procesare robustă a imaginilor        | VALIDATE_IMAGE respinge fișiere corupte / cu rezoluție mică, evitând erorile RN  | Modul Validator + Enhancer          |
-| Export + trasabilitate a rezultatelor | Fiecare analiză generează imagine finală + log JSON/CSV → **100% cazuri logate** | Modul Exporter + Logger (UI + back) |
-
----
-
-# 🔢 10. Contribuția originală la setul de date (Etapa 4 RN)
-
-Pentru a respecta cerința de **minimum 40% date originale**, proiectul include un modul dedicat de generare de imagini sintetice cu daune auto.
-
-### Contribuția originală la setul de date
-
-**Total observații finale:** 4000 imagini (train + val + test)
-**Observații originale:** ~1600 imagini (≈ 40%)
-
-**Tipul contribuției:**
-
-* ✅ Date generate prin simulare fizică / imagini sintetice cu daune
-* ⬜ Date achiziționate cu senzori proprii
-* ⬜ Etichetare/adnotare manuală
-* ⬜ Alte surse
-
-**Descriere detaliată:**
-
-Imaginile originale sunt generate pornind de la poze cu mașini fără daune sau cu daune minore, peste care se aplică, programatic:
-
-* **zgârieturi sintetice** (texturi de scratch, linii subțiri cu variații de culoare și grosime),
-* **îndoiri și crăpături simulate** prin deformări locale și overlay-uri de pattern-uri,
-* **noise + blur + variații de iluminare**, pentru a simula condiții reale (noapte, ploaie, camere diferite).
-
-Aceste transformări nu sunt simple augmentări (rotiri/flip), ci **simulează fizic apariția unor defecte noi**, generând imagini care nu există în datasetul public CarDD.
-
-Imagistica rezultată este folosită atât la antrenare, cât și la testare, crescând diversitatea tipurilor de daune și generalizarea modelului YOLO.
-
-**Locația codului:**
-`src/data_acquisition/generate_synthetic_damage_data.py`
-
-**Locația datelor:**
-`data/generated/`
-
----
-
-# 🧱 11. Arhitectura SIA și modulele software (Etapa 4)
-
-Arhitectura urmează modelul cu **3 module principale** cerut la curs:
-
----
-
-## 11.1. Modul 1 – Data Acquisition / Generare Date
-
-**Rol:**
-
-* generează imagini sintetice cu daune auto,
-* produce log-uri CSV cu metadata (tip defect, intensitate, parametri de simulare).
-
-**Responsabilități:**
-
-* rulează scriptul:
-  `python src/data_acquisition/generate_synthetic_damage_data.py`
-* salvează imaginile noi în `data/generated/`
-* salvează `data/generated/metadata.csv` cu coloane de tip:
-  `filename, scratch_level, dent_level, noise_level, brightness, ...`
-
-Acest modul acoperă partea de **contribuție originală 40%**.
-
----
-
-## 11.2. Modul 2 – Neural Network (YOLO11m)
-
-**Rol:**
-
-* definește și încarcă modelul YOLO11m,
-* rulează inferența pe imaginile preprocesate.
-
-**Fișiere cheie:**
-
-* `src/neural_network/train_yolo11.py` – script de definire + antrenare YOLO
-* `models/yolo11-base.pt` – model neantrenat (schelet RN pentru Etapa 4)
-* `models/yolo11-cardd.pt` – model antrenat pe CarDD + generated
-
-**Funcționalități:**
-
-* configurare parametri (`epochs`, `imgsz`, `batch`)
-* integrare augmentări avansate
-* salvare / încărcare model
-* API de inferență folosit de aplicația web.
-
----
-
-## 11.3. Modul 3 – Web Service / UI (Flask)
-
-**Rol:**
-
-* oferă interfața cu utilizatorul,
-* orchestrează pipeline-ul end-to-end.
-
-**Fișiere cheie:**
-
-* `src/web/app.py` – server Flask
-* `src/web/templates/index.html` – UI
-* `src/web/static/style.css` – stilizare
-* `docs/screenshots/ui_demo.png` – screenshot interfață
-
-**Flux:**
-
-1. Utilizatorul încarcă o imagine (endpoint `/upload`).
-2. Backend-ul salvează fișierul în `static/uploads/`.
-3. Se rulează modul ENHANCE + VALIDATE.
-4. Se apelează YOLO (modul NN).
-5. Rezultatul (bounding box-uri + scoruri) este desenat și salvat în `static/results/`.
-6. UI afișează comparativ input / output.
-
----
-
-# 📝 12. Concluzii
-
-Acest proiect demonstrează:
-
-* utilizarea YOLO11m pe un dataset real (CarDD), extins cu **date originale sintetice**;
-* preprocesare avansată prin ENHANCE pentru imagini cu calitate variabilă;
-* detecție rapidă și precisă a daunelor auto;
-* interfață web complet funcțională (upload → analiză → rezultat);
-* State Machine industrial pentru flux autonom și gestionarea erorilor;
-* arhitectură SIA cu 3 module (Data Acquisition, Neural Network, Web UI) conform cerințelor Etapa 4;
-* logging complet pentru fiecare caz analizat, cu posibilitate de audit și analiză ulterioară.
-
----
-
-# 👤 13. Autori
-
-* **Baba Cristian-Teodor** – Student FIIR, UPB
+Spune-mi sincer:
+👉 *mai sus* sau *asta e bomba finală*?
