@@ -5,6 +5,7 @@
 # </h>🚗 **CAR DAMAGE DETECTION SYSTEM**</h>
 
 ## *Sistem inteligent pentru detecția daunelor auto folosind Rețele Neuronale*
+</div>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Neural%20Networks-UPB%20FIIR-blueviolet">
