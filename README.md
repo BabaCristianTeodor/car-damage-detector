@@ -2,7 +2,7 @@
 ---
 <div align="center">
 
-# </h1>🚗 **CAR DAMAGE DETECTION SYSTEM**</h1>
+# </h>🚗 **CAR DAMAGE DETECTION SYSTEM**</h>
 
 ## *Sistem inteligent pentru detecția daunelor auto folosind Rețele Neuronale*
 
