@@ -138,80 +138,104 @@ Această etapă a avut rolul de a asigura **calitatea datelor**, fără a introd
 Această abordare minimizează riscul de **overfitting artificial**.
 
 ---
+Perfect, rămânem **exact cu structura ta** 👍
+Tot ce trebuie acum este să **integrezi elegant pozele** (grafic + diagramă) astfel încât README-ul să fie:
 
-🏗️ ETAPA 4 — Arhitectura sistemului (State Machine)
+* 📘 academic (prof-proof)
+* 🎬 cinematic (prima pagină „lovește”)
+* 🧠 clar (pozele explică textul, nu îl dublează)
 
-Aplicația este modelată ca o mașină de stări (State Machine), oferind control complet asupra fluxului de execuție și o integrare clară a rețelei neuronale într-un sistem software real.
+Mai jos îți dau **VARIANTA FINALĂ DE INSERARE A POZELOR**, **gata de copiat** în README-ul tău.
+Nu schimb nimic din conținutul tău, doar îl **ridic vizual**.
 
-Principii arhitecturale
+---
 
-determinism al execuției;
+## 🏗️ ETAPA 4 — Arhitectura sistemului (State Machine)
 
-tratare explicită a erorilor;
+Aplicația este modelată ca o **mașină de stări (State Machine)**, oferind control complet asupra fluxului de execuție și o integrare clară a rețelei neuronale într-un sistem software real.
 
-reset controlat al aplicației;
+### Principii arhitecturale
 
-separare clară între etapele logice ale pipeline-ului RN.
+* determinism al execuției;
+* tratare explicită a erorilor;
+* reset controlat al aplicației;
+* separare clară între etapele logice ale pipeline-ului RN.
 
-Diagrama de stări a aplicației
-<p align="center"> <img src="docs/state_machine_car_damage.png" width="85%"> </p> <p align="center"> <i>Figura 1 – Diagrama State Machine a sistemului de detecție a daunelor auto</i> </p>
+### Diagrama de stări a aplicației
+
+<p align="center">
+  <img src="docs/state_machine_car_damage.png" width="85%">
+</p>
+
+<p align="center">
+  <i>Figura 1 – Diagrama State Machine a sistemului de detecție a daunelor auto</i>
+</p>
 
 Fiecare stare din diagramă corespunde unei faze logice distincte:
 
-încărcarea imaginii de către utilizator;
-
-aplicarea preprocesării ENHANCE;
-
-validarea formatului și dimensiunii imaginii;
-
-rularea inferenței YOLO;
-
-afișarea rezultatelor sau tratarea erorilor;
-
-resetarea aplicației sau oprirea controlată.
+* încărcarea imaginii de către utilizator;
+* aplicarea preprocesării ENHANCE;
+* validarea formatului și dimensiunii imaginii;
+* rularea inferenței YOLO;
+* afișarea rezultatelor sau tratarea erorilor;
+* resetarea aplicației sau oprirea controlată.
 
 Această abordare permite o analiză clară a fluxului și o implementare robustă, ușor de extins.
 
-🤖 ETAPA 5 — Antrenarea și evaluarea rețelei neuronale
-Configurație utilizată
-Componentă	Specificație
-GPU	NVIDIA RTX 4060 – 8GB
-Framework	PyTorch + Ultralytics
-Model	YOLO11m
-Mod de rulare	Local
-Procesul de învățare
+---
+
+# 🤖 ETAPA 5 — Antrenarea și evaluarea rețelei neuronale
+
+### Configurație utilizată
+
+| Componentă    | Specificație          |
+| ------------- | --------------------- |
+| GPU           | NVIDIA RTX 4060 – 8GB |
+| Framework     | PyTorch + Ultralytics |
+| Model         | YOLO11m               |
+| Mod de rulare | Local                 |
+
+### Procesul de învățare
 
 Pentru analiza comportamentului rețelei neuronale pe parcursul antrenării a fost monitorizată evoluția funcției de pierdere (loss) atât pe setul de antrenare, cât și pe setul de validare.
 
-<p align="center"> <img src="docs/loss_curve.png" width="85%"> </p> <p align="center"> <i>Figura 2 – Evoluția loss-ului de antrenare și validare</i> </p>
+<p align="center">
+  <img src="docs/loss_curve.png" width="85%">
+</p>
 
-Graficul Loss vs Validation Loss evidențiază:
+<p align="center">
+  <i>Figura 2 – Evoluția loss-ului de antrenare și validare</i>
+</p>
 
-o scădere constantă a loss-ului de antrenare;
+Graficul *Loss vs Validation Loss* evidențiază:
 
-stabilitatea loss-ului pe setul de validare;
-
-lipsa unui overfitting sever;
-
-activarea corectă a mecanismului de early stopping.
+* o scădere constantă a loss-ului de antrenare;
+* stabilitatea loss-ului pe setul de validare;
+* lipsa unui overfitting sever;
+* activarea corectă a mecanismului de **early stopping**.
 
 Acest comportament indică o convergență stabilă a modelului.
 
-🖥️ Inferență reală – demonstrație finală
+---
+
+# 🖥️ Inferență reală – demonstrație finală
 
 Aplicația finală permite rularea inferenței YOLO pe imagini reale, utilizând același pipeline definit în etapele anterioare.
 
-<p align="center"> <img src="docs/screenshots/inference_real.png" width="90%"> </p> <p align="center"> <i>Figura 3 – Exemplu de inferență reală: imagine originală, preprocesată și rezultatul YOLO</i> </p>
+<p align="center">
+  <img src="docs/screenshots/inference_real.png" width="90%">
+</p>
+
+<p align="center">
+  <i>Figura 3 – Exemplu de inferență reală: imagine originală, preprocesată și rezultatul YOLO</i>
+</p>
 
 Funcționalități demonstrate:
 
-încărcarea unei imagini reale;
-
-aplicarea automată a preprocesării ENHANCE;
-
-detectarea daunelor prin YOLO;
-
-afișarea bounding box-urilor și a scorurilor de încredere.
+* încărcarea unei imagini reale;
+* aplicarea automată a preprocesării ENHANCE;
+* detectarea daunelor prin YOLO;
+* afișarea bounding box-urilor și a scorurilor de încredere.
 
 ---
 
