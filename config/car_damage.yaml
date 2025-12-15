@@ -1,0 +1,18 @@
+# config/car_damage.yaml
+# Config YOLO pentru dataset-ul tău (versiunea ENHANCED)
+
+path: data/images_enhanced   # root-ul dataset-ului
+
+train: train/images          # relative la path
+val: val/images
+test: test/images
+
+nc: 6                        # number of classes
+
+names:
+  0: dent
+  1: scratch
+  2: crack
+  3: glass_shatter
+  4: lamp_broken
+  5: tire_flat

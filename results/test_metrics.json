@@ -1,0 +1,11 @@
+{
+  "evaluated_model": "models/trained_model.pt",
+  "data_config": "config/car_damage.yaml",
+  "split": "test",
+  "box_precision_mean": 0.5723717181907836,
+  "box_recall_mean": 0.5160555376414714,
+  "box_f1_mean": 0.5427567036363153,
+  "map50": 0.4900232154964672,
+  "map50_95": 0.33040252964715716,
+  "created_at": "2025-12-15T15:23:35"
+}
