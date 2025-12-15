@@ -242,8 +242,11 @@ Funcționalități demonstrate:
 ## ⚠️ Limitări și observații
 
 * confuzie între clase vizual similare (`scratch` vs `crack`);
-* sensibilitate la variații de iluminare;
-* distribuție neechilibrată a claselor.
+* sensibilitate la variații de iluminare și reflexii ale caroseriei;
+* distribuție neechilibrată a claselor în setul de date;
+* **dimensiunea redusă a setului de date**, determinată de necesitatea **limitării numărului de imagini** pentru a asigura o **rulare eficientă a procesului de antrenare** și pentru a evita supraîncărcarea resurselor hardware disponibile (GPU și memorie);
+* ca urmare a acestei reduceri, **clasele cu defecte fine** (`scratch` și `crack`) dispun de mai puține exemple relevante, ceea ce conduce la **performanțe mai scăzute de recunoaștere** comparativ cu defectele cu contrast vizual ridicat.
+ Această limitare este specifică scenariilor de antrenare pe resurse hardware locale și nu reprezintă o deficiență conceptuală a arhitecturii alese.
 
 ---
 
@@ -256,7 +259,7 @@ Funcționalități demonstrate:
 
 ---
 
-> **Car Damage Detection System** reprezintă o aplicație practică solidă a rețelelor neuronale în domeniul computer vision.
+> **Car Damage Detection System** reprezintă o aplicație practică solidă a rețelelor neuronale în domeniul computer vision.<
 
 ---
 
