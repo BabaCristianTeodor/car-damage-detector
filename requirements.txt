@@ -1,8 +1,1 @@
-ultralytics==8.2.0
-numpy
-pandas
-matplotlib
-opencv-python
-tqdm
-pyyaml
-flask
+torch torchvision ultralytics opencv-python Pillow numpy matplotlib pandas
