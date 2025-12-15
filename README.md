@@ -139,62 +139,79 @@ Această abordare minimizează riscul de **overfitting artificial**.
 
 ---
 
-# 🏗️ **ETAPA 4 — Arhitectura sistemului**
+🏗️ ETAPA 4 — Arhitectura sistemului (State Machine)
 
-Aplicația este modelată ca o **mașină de stări (State Machine)**, oferind control complet asupra fluxului de execuție.
+Aplicația este modelată ca o mașină de stări (State Machine), oferind control complet asupra fluxului de execuție și o integrare clară a rețelei neuronale într-un sistem software real.
 
-### Principii arhitecturale:
+Principii arhitecturale
 
-* determinism;
-* tratare explicită a erorilor;
-* reset controlat;
-* integrare clară a RN într-un sistem software.
+determinism al execuției;
 
-Fiecare stare corespunde unei faze logice:
+tratare explicită a erorilor;
 
-* încărcare imagine,
-* preprocesare,
-* validare,
-* inferență YOLO,
-* afișare rezultate sau erori.
+reset controlat al aplicației;
 
----
+separare clară între etapele logice ale pipeline-ului RN.
 
-# 🤖 **ETAPA 5 — Antrenarea și evaluarea rețelei neuronale**
+Diagrama de stări a aplicației
+<p align="center"> <img src="docs/state_machine_car_damage.png" width="85%"> </p> <p align="center"> <i>Figura 1 – Diagrama State Machine a sistemului de detecție a daunelor auto</i> </p>
 
-### Configurație utilizată
+Fiecare stare din diagramă corespunde unei faze logice distincte:
 
-| Componentă | Specificație          |
-| ---------- | --------------------- |
-| GPU        | NVIDIA RTX 4060 – 8GB |
-| Framework  | PyTorch + Ultralytics |
-| Model      | YOLO11m               |
-| Mod rulare | Local                 |
+încărcarea imaginii de către utilizator;
 
-### Procesul de învățare
+aplicarea preprocesării ENHANCE;
 
-Graficul *Loss vs Validation Loss* evidențiază:
+validarea formatului și dimensiunii imaginii;
 
-* scădere constantă a loss-ului de antrenare;
-* stabilitate pe setul de validare;
-* activare corectă a mecanismului de early stopping.
+rularea inferenței YOLO;
 
----
+afișarea rezultatelor sau tratarea erorilor;
 
-# 🖥️ **Inferență reală – demonstrație finală**
+resetarea aplicației sau oprirea controlată.
 
-Aplicația finală permite:
+Această abordare permite o analiză clară a fluxului și o implementare robustă, ușor de extins.
 
-* încărcarea unei imagini reale;
-* aplicarea automată a preprocesării ENHANCE;
-* rularea inferenței YOLO;
-* afișarea rezultatelor annotate.
+🤖 ETAPA 5 — Antrenarea și evaluarea rețelei neuronale
+Configurație utilizată
+Componentă	Specificație
+GPU	NVIDIA RTX 4060 – 8GB
+Framework	PyTorch + Ultralytics
+Model	YOLO11m
+Mod de rulare	Local
+Procesul de învățare
 
-📌 Exemplu real salvat în:
+Pentru analiza comportamentului rețelei neuronale pe parcursul antrenării a fost monitorizată evoluția funcției de pierdere (loss) atât pe setul de antrenare, cât și pe setul de validare.
 
-```
-docs/screenshots/inference_real.png
-```
+<p align="center"> <img src="docs/loss_curve.png" width="85%"> </p> <p align="center"> <i>Figura 2 – Evoluția loss-ului de antrenare și validare</i> </p>
+
+Graficul Loss vs Validation Loss evidențiază:
+
+o scădere constantă a loss-ului de antrenare;
+
+stabilitatea loss-ului pe setul de validare;
+
+lipsa unui overfitting sever;
+
+activarea corectă a mecanismului de early stopping.
+
+Acest comportament indică o convergență stabilă a modelului.
+
+🖥️ Inferență reală – demonstrație finală
+
+Aplicația finală permite rularea inferenței YOLO pe imagini reale, utilizând același pipeline definit în etapele anterioare.
+
+<p align="center"> <img src="docs/screenshots/inference_real.png" width="90%"> </p> <p align="center"> <i>Figura 3 – Exemplu de inferență reală: imagine originală, preprocesată și rezultatul YOLO</i> </p>
+
+Funcționalități demonstrate:
+
+încărcarea unei imagini reale;
+
+aplicarea automată a preprocesării ENHANCE;
+
+detectarea daunelor prin YOLO;
+
+afișarea bounding box-urilor și a scorurilor de încredere.
 
 ---
 
