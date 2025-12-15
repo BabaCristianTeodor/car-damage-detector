@@ -1,7 +1,8 @@
 
 ---
+<div align="center">
 
-# 🚗 **CAR DAMAGE DETECTION SYSTEM**
+# </h1>🚗 **CAR DAMAGE DETECTION SYSTEM**</h1>
 
 ## *Sistem inteligent pentru detecția daunelor auto folosind Rețele Neuronale*
 
@@ -18,7 +19,7 @@
   Facultatea de Inginerie Industrială și Robotică (FIIR)<br>
   Disciplina: <b>Rețele Neuronale</b><br><br>
   Student: <b>Baba Cristian Teodor</b><br>
-  An universitar: 2024–2025
+  An universitar: 2025–2026
 </p>
 
 ---
