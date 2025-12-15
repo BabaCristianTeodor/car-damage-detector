@@ -256,18 +256,7 @@ Funcționalități demonstrate:
 
 ---
 
-# ✅ Concluzie
-
-Proiectul demonstrează:
-
-* înțelegerea completă a pipeline-ului RN;
-* implementarea unui sistem real, funcțional;
-* documentație coerentă, clară și academică.
-
 > **Car Damage Detection System** reprezintă o aplicație practică solidă a rețelelor neuronale în domeniul computer vision.
 
 ---
 
-
-Spune-mi sincer:
-👉 *mai sus* sau *asta e bomba finală*?
