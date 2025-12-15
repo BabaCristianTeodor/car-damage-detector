@@ -259,7 +259,7 @@ Funcționalități demonstrate:
 
 ---
 
-> **Car Damage Detection System** reprezintă o aplicație practică solidă a rețelelor neuronale în domeniul computer vision.<
+> **Car Damage Detection System** reprezintă o aplicație practică solidă a rețelelor neuronale în domeniul computer vision.
 
 ---
 
