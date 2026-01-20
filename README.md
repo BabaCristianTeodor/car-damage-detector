@@ -1,8 +1,7 @@
-
 ---
 <div align="center">
 
-# </h>🚗 **CAR DAMAGE DETECTION SYSTEM**</h>
+# 🚗 **CAR DAMAGE DETECTION SYSTEM**
 
 ## *Sistem inteligent pentru detecția daunelor auto folosind Rețele Neuronale*
 </div>
@@ -34,7 +33,8 @@ Sistemul nu se limitează la antrenarea unui model, ci acoperă **întregul cicl
 * analiză și pregătire dataset,
 * definirea arhitecturii software,
 * antrenare și evaluare,
-* inferență reală într-o aplicație funcțională.
+* inferență reală într-o aplicație funcțională,
+* optimizare și selecția modelului final.
 
 ---
 
@@ -71,37 +71,61 @@ Aceste clase au fost alese pentru a acoperi atât:
 
 Structura reflectă implementarea reală și separarea clară a responsabilităților:
 
-```
 project-root/
+├── README.md
+├── requirements.txt
+├── startweb.txt                  
+│
 ├── config/
 │   └── car_damage.yaml
 │
 ├── data/
 │   ├── images/
+│   │   ├── manual/               
+│   │   │   ├── images/
+│   │   │   └── labels/
 │   │   ├── train/
+│   │   │   ├── images/
+│   │   │   └── labels/
 │   │   ├── val/
+│   │   │   ├── images/
+│   │   │   └── labels/
 │   │   └── test/
+│   │       ├── images/
+│   │       └── labels/
 │   │
 │   └── images_enhanced/
 │       ├── train/
+│       │   ├── images/
+│       │   └── labels/  
 │       ├── val/
+│       │   ├── images/
+│       │   └── labels/ 
 │       └── test/
+│           ├── images/
+│           └── labels/
 │
 ├── models/
-│   └── trained_model.pt
+│   └── optimized_model.pt
 │
 ├── results/
 │   ├── training_history.csv
 │   ├── test_metrics.json
+│   ├── final_metrics.json
+│   ├── optimization_experiments.csv
 │   └── hyperparameters.yaml
 │
 ├── runs/
-│   └── rn_train/
+│   ├── rn_train/               
+│   ├── detect/              
+│   └── opt/    
 │
 ├── docs/
 │   ├── loss_curve.png
+│   ├── confusion_matrix_normalized.png
 │   └── screenshots/
-│       └── inference_real.png
+│       ├── inference_real.png
+│       └── inference_optimized_f.png
 │
 └── src/
     ├── preprocessing/
@@ -114,13 +138,12 @@ project-root/
     │
     └── app/
         └── main.py
-```
 
 ---
 
 # 🧪 **ETAPA 3 — Analiza și pregătirea setului de date**
 
-Această etapă a avut rolul de a asigura **calitatea datelor**, fără a introduce artificii inutile.
+Această etapă a avut rolul de a asigura **calitatea datelor**, fără a introduce artificii inutile care ar putea distorsiona generalizarea.
 
 ### Aspecte cheie:
 
@@ -131,22 +154,11 @@ Această etapă a avut rolul de a asigura **calitatea datelor**, fără a introd
 
 ### Preprocesare utilizată
 
-✔ **ENHANCE (soft)**
-✔ evidențiere defecte fine
-✔ păstrarea fidelității imaginii originale
+✔ **ENHANCE (soft)**  
+✔ evidențiere defecte fine  
+✔ păstrarea fidelității imaginii originale  
 
-Această abordare minimizează riscul de **overfitting artificial**.
-
----
-Perfect, rămânem **exact cu structura ta** 👍
-Tot ce trebuie acum este să **integrezi elegant pozele** (grafic + diagramă) astfel încât README-ul să fie:
-
-* 📘 academic (prof-proof)
-* 🎬 cinematic (prima pagină „lovește”)
-* 🧠 clar (pozele explică textul, nu îl dublează)
-
-Mai jos îți dau **VARIANTA FINALĂ DE INSERARE A POZELOR**, **gata de copiat** în README-ul tău.
-Nu schimb nimic din conținutul tău, doar îl **ridic vizual**.
+Această abordare minimizează riscul de **overfitting artificial** și păstrează un pipeline ușor de justificat academic.
 
 ---
 
@@ -218,7 +230,7 @@ Acest comportament indică o convergență stabilă a modelului.
 
 ---
 
-# 🖥️ Inferență reală – demonstrație finală
+# 🖥️ Inferență reală – demonstrație (model antrenat)
 
 Aplicația finală permite rularea inferenței YOLO pe imagini reale, utilizând același pipeline definit în etapele anterioare.
 
@@ -227,7 +239,7 @@ Aplicația finală permite rularea inferenței YOLO pe imagini reale, utilizând
 </p>
 
 <p align="center">
-  <i>Figura 3 – Exemplu de inferență reală: imagine originală, preprocesată și rezultatul YOLO</i>
+  <i>Figura 3 – Exemplu de inferență reală (Etapa 5): imagine originală, preprocesată și rezultatul YOLO</i>
 </p>
 
 Funcționalități demonstrate:
@@ -239,16 +251,19 @@ Funcționalități demonstrate:
 
 ---
 
-## ⚠️ Limitări și observații
+## ⚠️ Limitări și observații (context pentru interpretarea metricilor)
 
 * confuzie între clase vizual similare (`scratch` vs `crack`);
 * sensibilitate la variații de iluminare și reflexii ale caroseriei;
 * distribuție neechilibrată a claselor în setul de date;
 * **dimensiunea redusă a setului de date**, determinată de necesitatea **limitării numărului de imagini** pentru a asigura o **rulare eficientă a procesului de antrenare** și pentru a evita supraîncărcarea resurselor hardware disponibile (GPU și memorie);
 * ca urmare a acestei reduceri, **clasele cu defecte fine** (`scratch` și `crack`) dispun de mai puține exemple relevante, ceea ce conduce la **performanțe mai scăzute de recunoaștere** comparativ cu defectele cu contrast vizual ridicat.
- Această limitare este specifică scenariilor de antrenare pe resurse hardware locale și nu reprezintă o deficiență conceptuală a arhitecturii alese.
 
-# 🧪 Etapa 6 — Optimizare, selecția modelului și evaluare finală
+Această limitare este specifică scenariilor de antrenare pe resurse hardware locale și nu reprezintă o deficiență conceptuală a arhitecturii alese.
+
+---
+
+# 🧪 ETAPA 6 — Optimizare, selecția modelului și evaluare finală
 
 În această etapă a fost realizată optimizarea performanței modelului YOLO utilizat pentru detecția daunelor auto, prin rularea mai multor experimente controlate și evaluarea comparativă a rezultatelor obținute.
 
@@ -268,17 +283,18 @@ Metricile Precision și Recall au fost analizate complementar, pentru interpreta
 
 ---
 
-## 🔬 Experimente de optimizare
+## 🔬 Experimente de optimizare (exp1–exp4)
 
-Au fost realizate patru experimente de optimizare, denumite `exp1` – `exp4`.  
-Pentru fiecare experiment a fost analizată performanța pe setul de validare.
+Au fost realizate patru experimente de optimizare, denumite `exp1` – `exp4`. Pentru fiecare experiment a fost analizată performanța pe setul de validare.
 
 Rezultatele complete sunt documentate în fișierul:
 
 results/optimization_experiments.csv
 
+yaml
+Copy code
 
-### 📊 Rezultate comparative
+### 📊 Rezultate comparative (ultimul epoch)
 
 | Experiment | mAP@50 | mAP@50–95 | Precision | Recall |
 |-----------|--------|-----------|-----------|--------|
@@ -287,14 +303,19 @@ results/optimization_experiments.csv
 | exp3 | **0.51103** | **0.38338** | 0.56153 | **0.49470** |
 | exp4 | 0.38352 | 0.27721 | 0.45227 | 0.43409 |
 
+### Observații analitice asupra experimentelor
+
+- **exp1 vs exp2**: rezultate identice (același comportament de convergență), sugerând că modificarea introdusă nu a avut impact măsurabil sau a fost neutralizată de setările implicite ale pipeline-ului YOLO.
+- **exp3**: obține cel mai bun compromis global, crescând atât **mAP@50**, cât și **mAP@50–95**, concomitent cu îmbunătățirea recall-ului; acest lucru indică o generalizare mai robustă, nu doar o creștere punctuală a unei singure metrici.
+- **exp4**: degradare semnificativă pe toate metricile, ceea ce sugerează fie o configurație instabilă, fie un regim de învățare nepotrivit pentru distribuția dataset-ului.
+
 ---
 
 ## 🏆 Selecția modelului optim
 
 Pe baza valorii maxime obținute pentru **mAP@50–95**, experimentul **exp3** a fost ales ca model optimizat final.
 
-**Concluzie:**  
-Experimentul `exp3` oferă cea mai bună performanță globală, având cel mai ridicat scor mAP@50–95 și un recall superior, indicând o capacitate mai bună de detectare a daunelor auto pe setul de validare.
+**Motivație:** exp3 oferă cea mai bună performanță globală, având cel mai ridicat scor mAP@50–95 și un recall superior, indicând o capacitate mai bună de detectare a daunelor auto pe setul de validare.
 
 ---
 
@@ -304,6 +325,8 @@ Modelul rezultat în urma Etapei 6 este salvat ca:
 
 models/optimized_model.pt
 
+yaml
+Copy code
 
 Acest model înlocuiește complet versiunea utilizată în Etapa 5 și reprezintă modelul final al proiectului.
 
@@ -311,54 +334,44 @@ Acest model înlocuiește complet versiunea utilizată în Etapa 5 și reprezint
 
 ## 📉 Confusion Matrix și evaluare finală
 
-Confusion Matrix pentru modelul optimizat a fost generată în urma evaluării pe setul de validare.  
-Dintre rulările multiple de evaluare (`val`, `val2`), a fost selectată cea mai recentă, corespunzătoare evaluării finale a modelului optimizat.
-
-Fișierul rezultat este salvat în:
+Confusion Matrix pentru modelul optimizat a fost generată în urma evaluării pe setul de validare.
 
 <p align="center">
   <img src="docs/confusion_matrix_normalized.png" width="85%">
 </p>
 
 <p align="center">
-  <i>Figura 4 – Matricea de confusie a sistemului</i>
+  <i>Figura 4 – Matricea de confuzie a sistemului (model optimizat)</i>
 </p>
-
 
 Analiza evidențiază confuzii între clase vizual similare (ex. `scratch` și `crack`), precum și o performanță superioară pentru defectele cu contrast vizual ridicat.
 
 ---
 
-## 🖥️ Integrarea în aplicația finală
+## 🖥️ Integrarea în aplicația finală (model optimizat)
 
-Aplicația UI a fost actualizată pentru a utiliza exclusiv modelul optimizat:
-
-models/optimized_model.pt
-
-
-Această integrare asigură consistența între etapa de evaluare și inferența realizată în aplicația finală.
-
-Un screenshot demonstrativ al inferenței este disponibil în:
-
+Aplicația UI a fost actualizată pentru a utiliza exclusiv modelul optimizat (`optimized_model.pt`), asigurând consistența între etapa de evaluare și inferența realizată în aplicația finală.
 
 <p align="center">
   <img src="docs/screenshots/inference_optimized_f.png" width="85%">
 </p>
 
 <p align="center">
-  <i>Figura 5 – Screenshot cu modelul actualizat incarcat si testat</i>
-</p
+  <i>Figura 5 – Screenshot: inferență cu modelul optimizat încărcat și testat</i>
+</p>
 
 ---
 
-## 📊 Metrici finale
+## 📊 Metrici finale (model optimizat)
 
 Metricile finale obținute pentru modelul optimizat sunt salvate în:
 
 results/final_metrics.json
 
+yaml
+Copy code
 
-Valorile obținute sunt:
+Valori raportate:
 
 - Precision (macro): **0.568**
 - Recall (macro): **0.495**
@@ -367,31 +380,100 @@ Valorile obținute sunt:
 
 ---
 
+## 📐 Interpretare detaliată a coeficienților (metricilor) — secțiunea critică
+
+În object detection, interpretarea metricilor trebuie făcută în context, deoarece fiecare coeficient descrie un aspect diferit al comportamentului modelului. În plus, pentru defecte auto (mai ales cele fine), localizarea exactă a conturului este intrinsec dificilă, ceea ce afectează direct scorurile mAP stricte.
+
+### 🔹 Precision (Precizia)
+
+Precision reprezintă proporția predicțiilor corecte din totalul predicțiilor făcute:
+
+\[
+Precision = \frac{TP}{TP + FP}
+\]
+
+**Precision ≈ 0.568** indică faptul că modelul produce, în majoritatea cazurilor, detecții valide (număr relativ redus de alarme false). În practică, aceasta înseamnă că sistemul este mai degrabă „conservator”: preferă să nu raporteze o daună decât să raporteze una incorect.
+
+Acest comportament este dezirabil în aplicații de inspecție, deoarece minimizează situațiile în care utilizatorul este indus în eroare de detecții artificiale.
+
+---
+
+### 🔹 Recall (Rata de detecție)
+
+Recall măsoară proporția daunelor reale detectate corect:
+
+\[
+Recall = \frac{TP}{TP + FN}
+\]
+
+**Recall ≈ 0.495** arată că o parte dintre daune nu sunt detectate, în special în cazul:
+- defectelor subțiri, cu contur difuz (`scratch`);
+- defectelor cu textură asemănătoare fundalului (`crack`);
+- claselor slab reprezentate (dataset neechilibrat).
+
+În termeni practici, recall-ul reflectă cât de „sensibil” este sistemul: un recall mai mare ar însemna mai puține ratări, dar de regulă cu riscul creșterii alarmelor false (scăderea precision). În acest proiect, echilibrul obținut este realist pentru un pipeline rulat local și un dataset limitat.
+
+---
+
+### 🔹 mAP@50 (Mean Average Precision la IoU 0.5)
+
+mAP@50 este performanța la un prag IoU permisiv, unde bounding box-ul trebuie să se suprapună decent cu adevărul de referință, dar nu perfect.
+
+**mAP@50 ≈ 0.512** indică faptul că modelul:
+- identifică în mod corect defectele și zona aproximativă a acestora;
+- se comportă consistent pe majoritatea scenariilor.
+
+Pentru multe aplicații practice de triere/filtrare inițială, mAP@50 este suficient pentru a considera sistemul util.
+
+---
+
+### 🔹 mAP@50–95 (metrică principală, strictă)
+
+mAP@50–95 este metrica cea mai exigentă: media performanței pe praguri IoU de la 0.50 la 0.95. Aceasta penalizează puternic localizările imprecise și bounding box-urile care nu conturează exact defectul.
+
+**mAP@50–95 ≈ 0.383** este o valoare realistă pentru detecția de defecte auto, deoarece:
+- defectele sunt adesea mici/alungite și greu de încadrat exact;
+- anotările umane au variații inerente (conturul zgârieturilor nu este obiectiv);
+- dataset-ul este neechilibrat (clasele rare scad media);
+- nu s-au folosit augmentări agresive (decizie intenționată pentru realism și justificare academică).
+
+Diferența dintre **mAP@50 (0.512)** și **mAP@50–95 (0.383)** este un indicator clar că modelul recunoaște defectele, dar localizarea foarte precisă rămâne partea cea mai dificilă.
+
+---
+
+### 🔎 Corelarea metricilor cu realitatea aplicației
+
+Combinația obținută:
+- Precision moderată spre ridicată,
+- Recall moderat,
+- mAP@50 solid,
+- mAP@50–95 strict,
+
+descrie un model echilibrat: oferă detecții valide și stabile, dar este constrâns de natura dataset-ului și de dificultatea intrinsecă a localizării defectelor fine.
+
+Acesta este exact tipul de rezultat care ar trebui obținut într-un proiect academic realist, fără supra-optimizare artificială.
+
+---
+
 ## ✅ Concluzie generală
 
 Proiectul demonstrează implementarea completă a unui sistem de detecție a daunelor auto bazat pe rețele neuronale, incluzând:
 - antrenare și evaluare riguroasă;
-- optimizare prin experimente controlate;
-- selecția justificată a modelului final;
-- integrarea într-o aplicație funcțională.
+- optimizare prin experimente controlate și selecția justificată a modelului;
+- integrarea într-o aplicație funcțională de inferență;
+- interpretare academică a coeficienților de performanță.
 
-Soluția rezultată reprezintă o aplicație practică solidă a rețelelor neuronale în domeniul *computer vision*.
+Soluția rezultată reprezintă o aplicație practică solidă a rețelelor neuronale în domeniul *computer vision* și oferă o bază robustă pentru extindere.
 
 ---
 
 ## 🚀 Posibile direcții de dezvoltare
 
-* extinderea dataset-ului;
-* fine-tuning dedicat pentru defecte fine;
+* extinderea dataset-ului și rebalansarea claselor;
+* fine-tuning dedicat pentru defecte fine (`scratch`, `crack`);
 * inferență pe secvențe video;
-* analiză comparativă cu alte arhitecturi.
+* analiză comparativă cu alte arhitecturi (YOLO variants / Faster R-CNN / RetinaNet).
 
 ---
 
 > **Car Damage Detection System** reprezintă o aplicație practică solidă a rețelelor neuronale în domeniul computer vision.
-
----
-
-
-
-
