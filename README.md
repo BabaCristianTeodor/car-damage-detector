@@ -321,7 +321,7 @@ Fișierul rezultat este salvat în:
 </p>
 
 <p align="center">
-  <i>Figura 3 – Matricea de confusie a sistemului</i>
+  <i>Figura 4 – Matricea de confusie a sistemului</i>
 </p>
 
 
@@ -346,7 +346,7 @@ Un screenshot demonstrativ al inferenței este disponibil în:
 </p>
 
 <p align="center">
-  <i>Figura 4 – Screenshot cu modelul actualizat incarcat si testat</i>
+  <i>Figura 5 – Screenshot cu modelul actualizat incarcat si testat</i>
 </p
 
 ---
@@ -391,6 +391,7 @@ Soluția rezultată reprezintă o aplicație practică solidă a rețelelor neur
 > **Car Damage Detection System** reprezintă o aplicație practică solidă a rețelelor neuronale în domeniul computer vision.
 
 ---
+
 
 
 
