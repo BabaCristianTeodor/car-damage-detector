@@ -291,9 +291,6 @@ Rezultatele complete sunt documentate în fișierul:
 
 results/optimization_experiments.csv
 
-yaml
-Copy code
-
 ### 📊 Rezultate comparative (ultimul epoch)
 
 | Experiment | mAP@50 | mAP@50–95 | Precision | Recall |
@@ -325,8 +322,6 @@ Modelul rezultat în urma Etapei 6 este salvat ca:
 
 models/optimized_model.pt
 
-yaml
-Copy code
 
 Acest model înlocuiește complet versiunea utilizată în Etapa 5 și reprezintă modelul final al proiectului.
 
@@ -368,8 +363,6 @@ Metricile finale obținute pentru modelul optimizat sunt salvate în:
 
 results/final_metrics.json
 
-yaml
-Copy code
 
 Valori raportate:
 
@@ -477,4 +470,5 @@ Soluția rezultată reprezintă o aplicație practică solidă a rețelelor neur
 ---
 
 > **Car Damage Detection System** reprezintă o aplicație practică solidă a rețelelor neuronale în domeniul computer vision.
+
 
