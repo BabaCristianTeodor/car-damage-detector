@@ -317,7 +317,7 @@ Dintre rulările multiple de evaluare (`val`, `val2`), a fost selectată cea mai
 Fișierul rezultat este salvat în:
 
 <p align="center">
-  <img src="docs/confusion_matrix_optimized.png" width="85%">
+  <img src="docs/confusion_matrix_normalized.png" width="85%">
 </p>
 
 <p align="center">
@@ -391,5 +391,6 @@ Soluția rezultată reprezintă o aplicație practică solidă a rețelelor neur
 > **Car Damage Detection System** reprezintă o aplicație practică solidă a rețelelor neuronale în domeniul computer vision.
 
 ---
+
 
 
