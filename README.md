@@ -341,8 +341,6 @@ Această integrare asigură consistența între etapa de evaluare și inferența
 Un screenshot demonstrativ al inferenței este disponibil în:
 
 
-docs/screenshots/inference_optimized.png
-
 <p align="center">
   <img src="docs/screenshots/inference_optimized_f.png" width="85%">
 </p>
@@ -393,4 +391,5 @@ Soluția rezultată reprezintă o aplicație practică solidă a rețelelor neur
 > **Car Damage Detection System** reprezintă o aplicație practică solidă a rețelelor neuronale în domeniul computer vision.
 
 ---
+
 
