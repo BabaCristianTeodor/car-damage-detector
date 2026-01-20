@@ -70,7 +70,7 @@ Aceste clase au fost alese pentru a acoperi atât:
 # 📂 Structura actuală a proiectului
 
 Structura reflectă implementarea reală și separarea clară a responsabilităților:
-
+```
 project-root/
 ├── README.md
 ├── requirements.txt
@@ -138,7 +138,7 @@ project-root/
     │
     └── app/
         └── main.py
-
+```
 ---
 
 # 🧪 **ETAPA 3 — Analiza și pregătirea setului de date**
@@ -477,3 +477,4 @@ Soluția rezultată reprezintă o aplicație practică solidă a rețelelor neur
 ---
 
 > **Car Damage Detection System** reprezintă o aplicație practică solidă a rețelelor neuronale în domeniul computer vision.
+
