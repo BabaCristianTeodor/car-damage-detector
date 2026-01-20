@@ -1,0 +1,8 @@
+{
+  "model": "models/optimized_model.pt",
+  "imgsz": 640,
+  "precision_macro": 0.5677242857894865,
+  "recall_macro": 0.4952234692957643,
+  "mAP50": 0.5124359660841776,
+  "mAP50_95": 0.3832709251982209
+}

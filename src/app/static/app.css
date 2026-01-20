@@ -382,3 +382,9 @@ code{
   .img-grid{ grid-template-columns: 1fr; }
   .viewer{ height: 340px; }
 }
+
+.mark {
+    width: 38px;
+    height: 38px;
+}
+

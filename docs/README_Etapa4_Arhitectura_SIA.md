@@ -1,13 +1,10 @@
-
----
-
 # 📘 Etapa 4 – Arhitectura Sistemului bazat pe Rețele Neuronale
 
-**Disciplina:** Rețele Neuronale
-**Instituție:** Universitatea POLITEHNICA București – FIIR
-**Student:** Baba Cristian Teodor
-**Proiect:** Detecția automată a daunelor auto din imagini
-**An universitar:** 2026–2026
+**Disciplina:** Rețele Neuronale  
+**Instituție:** Universitatea POLITEHNICA București – FIIR  
+**Student:** Baba Cristian Teodor  
+**Proiect:** Detecția automată a daunelor auto din imagini  
+**An universitar:** 2025–2026  
 
 ---
 
@@ -17,190 +14,226 @@ Scopul Etapei 4 este **definirea arhitecturii funcționale a sistemului software
 
 Această etapă NU urmărește:
 
-* optimizarea performanței,
-* obținerea unor metrici ridicate,
-* evaluarea finală a modelului.
+- optimizarea performanței;
+- obținerea unor metrici ridicate;
+- evaluarea finală a modelului.
 
 Obiectivul este **demonstrarea înțelegerii arhitecturii RN și a integrării acesteia într-un sistem funcțional**.
 
 ---
 
-## 2. Tipul arhitecturii utilizate
+## 2. Nevoie reală și soluția propusă prin SIA
+
+| Nevoie reală concretă | Soluția oferită de sistem | Modul software implicat |
+|-----------------------|---------------------------|-------------------------|
+| Detectarea automată a daunelor auto din imagini | Analiza imaginilor utilizând o rețea neuronală YOLO | Modul RN |
+| Reducerea timpului de analiză manuală | Inferență automată în timp real | Modul RN |
+| Interacțiune facilă cu utilizatorul | Interfață grafică pentru încărcare și afișare rezultate | Modul UI |
+| Control sigur al fluxului aplicației | Arhitectură bazată pe State Machine | Modul logic |
+
+---
+
+## 3. Tipul arhitecturii utilizate
 
 Sistemul este implementat sub forma unei **mașini de stări (State Machine)**, deoarece:
 
-* aplicația este declanșată de evenimente (încărcarea unei imagini);
-* fluxul este secvențial și determinist;
-* pot fi tratate explicit cazurile de eroare;
-* aplicația poate reveni controlat într-o stare inițială.
+- aplicația este declanșată de evenimente (încărcarea unei imagini);
+- fluxul este secvențial și determinist;
+- pot fi tratate explicit cazurile de eroare;
+- aplicația poate reveni controlat într-o stare inițială.
 
 Această abordare este potrivită pentru aplicații de inferență offline / semi-interactive.
 
 ---
 
-## 3. Descriere generală a fluxului de execuție
+## 4. Descriere generală a fluxului de execuție
 
 Fluxul complet al aplicației este următorul:
 
-```
 Start sistem
- → Așteaptă încărcarea unei imagini
- → Preprocesare (ENHANCE)
- → Validare imagine
- → Inferență YOLO
- → Afișare rezultate / Tratare erori
- → Reset / Oprire aplicație
-```
+→ Așteaptă încărcarea unei imagini
+→ Preprocesare (ENHANCE)
+→ Validare imagine
+→ Inferență YOLO
+→ Afișare rezultate / Tratare erori
+→ Reset / Oprire aplicație
+
 
 Fiecare etapă corespunde unei **stări distincte** din diagrama State Machine.
 
+Diagrama completă a State Machine-ului este disponibilă în:
+docs/state_machine.png
+
+
 ---
 
-## 4. Descrierea stărilor din State Machine
+## 5. Descrierea stărilor din State Machine
 
-### 4.1 Starea START
+### 5.1 Starea START
 
-**Rol:**
-Inițializează sistemul și resursele necesare (model RN, GPU/CPU, configurări).
+**Rol:**  
+Inițializează sistemul și resursele necesare (model RN, CPU/GPU, configurări).
 
-**Tranziție:**
+**Tranziție:**  
 → `Așteaptă încărcarea unei imagini`
 
 ---
 
-### 4.2 Starea „Așteaptă încărcarea unei imagini”
+### 5.2 Starea „Așteaptă încărcarea unei imagini”
 
-**Rol:**
+**Rol:**  
 Sistemul se află în stare pasivă, așteptând acțiunea utilizatorului.
 
 **Evenimente posibile:**
 
-* utilizatorul încarcă o imagine → trecere la preprocesare;
-* utilizatorul oprește aplicația → închidere controlată.
+- utilizatorul încarcă o imagine → trecere la preprocesare;
+- utilizatorul oprește aplicația → închidere controlată.
 
 ---
 
-### 4.3 Starea „Aplică filtre ENHANCE”
+### 5.3 Starea „Aplică filtre ENHANCE”
 
-**Rol:**
+**Rol:**  
 Aplică singura etapă de preprocesare utilizată în proiect: **ENHANCE**.
 
 Operația ENHANCE:
+- îmbunătățește contrastul local;
+- evidențiază defectele fine;
+- nu modifică geometria imaginii.
 
-* îmbunătățește contrastul local;
-* evidențiază defectele fine;
-* nu modifică geometria imaginii.
-
-**Tranziție:**
+**Tranziție:**  
 → `Verifică format, rezoluție, dimensiune`
 
 ---
 
-### 4.4 Starea „Verifică format, rezoluție, dimensiune”
+### 5.4 Starea „Verifică format, rezoluție, dimensiune”
 
-**Rol:**
+**Rol:**  
 Asigură validitatea imaginii de intrare.
 
 **Verificări efectuate:**
 
-* format imagine valid (ex. JPG/PNG);
-* imagine necoruptă;
-* dimensiuni acceptabile pentru inferență.
+- format imagine valid (JPG / PNG);
+- imagine necoruptă;
+- dimensiuni compatibile cu inferența YOLO.
 
 **Tranziții:**
 
-* imagine validă → `Rulează inferența YOLO`;
-* fișier invalid / corupt → `Afișează eroare și salvează log`.
+- imagine validă → `Rulează inferența YOLO`;
+- fișier invalid → `Afișează eroare și salvează log`.
 
 ---
 
-### 4.5 Starea „Rulează inferența YOLO”
+### 5.5 Starea „Rulează inferența YOLO”
 
-**Rol:**
+**Rol:**  
 Execută inferența utilizând rețeaua neuronală YOLO.
 
 **Output generat:**
 
-* bounding box-uri;
-* scoruri de încredere;
-* clasele detectate.
+- bounding box-uri;
+- scoruri de încredere;
+- clasele detectate.
 
 **Tranziții:**
 
-* inferență reușită → `Desenează bounding box-uri și salvează rezultatul`;
-* eroare RN / GPU / timeout → `Afișează eroare și salvează log`.
+- inferență reușită → `Desenează bounding box-uri și salvează rezultatul`;
+- eroare RN / hardware → `Afișează eroare și salvează log`.
 
 ---
 
-### 4.6 Starea „Desenează bounding box-uri și salvează rezultatul”
+### 5.6 Starea „Desenează bounding box-uri și salvează rezultatul”
 
 **Rol:**
 
-* suprapune bounding box-urile pe imagine;
-* salvează rezultatul final;
-* afișează rezultatul utilizatorului.
+- suprapune bounding box-urile pe imagine;
+- salvează rezultatul final;
+- afișează rezultatul utilizatorului.
 
-**Tranziție:**
-→ revenire la `Așteaptă încărcarea unei imagini` (pentru o nouă inferență)
+**Tranziție:**  
+→ revenire la `Așteaptă încărcarea unei imagini`  
 sau → `Oprire aplicație`.
 
 ---
 
-### 4.7 Starea „Afișează eroare și salvează log”
+### 5.7 Starea „Afișează eroare și salvează log”
 
-**Rol:**
-Gestionează toate situațiile de eroare:
+**Rol:**  
+Gestionează situațiile de eroare:
 
-* fișiere invalide;
-* erori de inferență;
-* probleme hardware (GPU / timeout).
+- fișiere invalide;
+- erori de inferență;
+- probleme hardware.
 
 **Acțiuni:**
 
-* afișare mesaj de eroare;
-* salvare informații în log.
+- afișare mesaj de eroare;
+- salvare informații în fișiere de log.
 
-**Tranziție:**
-→ reset către `Așteaptă încărcarea unei imagini`
+**Tranziție:**  
+→ reset către `Așteaptă încărcarea unei imagini`  
 sau → `Oprire aplicație`.
 
 ---
 
-### 4.8 Starea „Oprire aplicație / eliberare resurse”
+### 5.8 Starea „Oprire aplicație / eliberare resurse”
 
 **Rol:**
 
-* eliberează memoria;
-* închide sesiunile GPU;
-* finalizează aplicația în mod controlat.
+- eliberarea memoriei;
+- închiderea sesiunilor CPU/GPU;
+- oprirea controlată a aplicației.
 
-**Tranziție:**
+**Tranziție:**  
 → `End`
 
 ---
 
-## 5. Justificarea utilizării arhitecturii State Machine
+## 6. Modulele sistemului
 
-Această arhitectură permite:
+Sistemul este organizat în trei module principale:
 
-* control complet asupra fluxului aplicației;
-* tratarea explicită a erorilor;
-* revenirea sigură într-o stare inițială;
-* claritate și simplitate în implementare.
-
-Este o soluție **adecvată din punct de vedere academic** pentru integrarea unei rețele neuronale într-un sistem software funcțional.
+1. **Modul Data / Preprocesare** – gestionarea imaginilor și aplicarea filtrului ENHANCE  
+2. **Modul Rețea Neuronală (RN)** – inferența YOLO pentru detectarea daunelor  
+3. **Modul UI** – interfața cu utilizatorul și afișarea rezultatelor  
 
 ---
 
-## 6. Concluzie
+## 7. Contribuția originală a studentului
+
+Contribuția originală în cadrul proiectului este de **peste 40%** și constă în:
+
+- definirea completă a arhitecturii software;
+- proiectarea State Machine-ului;
+- integrarea logică a rețelei neuronale într-un sistem funcțional;
+- definirea fluxurilor de eroare și reset.
+
+Tipul contribuției:
+- [x] Proiectare arhitecturală
+- [x] Implementare logică
+- [x] Integrare RN + UI
+
+---
+
+## 8. Structura repository-ului (relevantă pentru Etapa 4)
+
+├── data/
+├── src/
+│ ├── neural_network/
+│ └── app/
+├── docs/
+│ └── state_machine.png
+├── models/
+└── README_Etapa4_Arhitectura_SIA.md
+
+---
+
+## 9. Concluzie
 
 Etapa 4 definește arhitectura logică și funcțională a sistemului de detecție a daunelor auto, demonstrând:
 
-* înțelegerea fluxului intern al aplicației;
-* integrarea unei rețele neuronale YOLO într-o aplicație reală;
-* utilizarea corectă a unei mașini de stări pentru controlul execuției.
+- înțelegerea fluxului intern al aplicației;
+- utilizarea corectă a unei arhitecturi bazate pe State Machine;
+- integrarea unei rețele neuronale YOLO într-un sistem software coerent.
 
-Această etapă reprezintă baza pentru **Etapa 5 – antrenarea, evaluarea și validarea performanței modelului**.
-
----
-
+Această etapă constituie fundamentul necesar pentru **Etapa 5 – Antrenarea și evaluarea modelului**.

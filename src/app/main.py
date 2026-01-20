@@ -17,13 +17,13 @@ from fastapi.staticfiles import StaticFiles
 from ultralytics import YOLO
 
 APP_TITLE = "Car Damage Detector — Academic Demo"
-MODEL_PATH = "models/trained_model.pt"
+MODEL_PATH = "models/optimized_model.pt"
 
 app = FastAPI(title=APP_TITLE)
 app.mount("/static", StaticFiles(directory="src/app/static"), name="static")
 
 if not os.path.exists(MODEL_PATH):
-    raise FileNotFoundError(f"Nu găsesc modelul la {MODEL_PATH}. Asigură-te că ai models/trained_model.pt")
+    raise FileNotFoundError(f"Nu găsesc modelul la {MODEL_PATH}. Asigură-te că ai models/optimized_model.pt")
 
 model = YOLO(MODEL_PATH)
 
@@ -91,13 +91,13 @@ def index():
 
   <header class="topbar">
     <div class="brand">
-      <div class="mark"></div>
+      <img src="/static/logo.svg" alt="Logo" class="mark">
       <div class="brand-text">
         <div class="title">Car Damage Detector</div>
         <div class="subtitle">Academic Demo • YOLO11m • Inference local</div>
       </div>
     </div>
-    <div class="chip">Model: <b>trained_model.pt</b></div>
+    <div class="chip">Model: <b>optimized_model.pt</b></div>
   </header>
 
     <main class="shell">
