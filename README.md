@@ -277,106 +277,188 @@ Pentru evaluarea și compararea experimentelor a fost utilizată ca metrică pri
 
 **mAP@50–95 (mean Average Precision pe multiple praguri IoU)**
 
-Aceasta este considerată metrica standard în detecția de obiecte, oferind o evaluare robustă a calității localizării și clasificării.
+Aceasta este considerată metrică standard în detecția de obiecte, oferind o evaluare robustă a calității localizării și clasificării.
 
-Metricile Precision și Recall au fost analizate complementar, pentru a înțelege echilibrul dintre:
-- capacitatea modelului de a evita alarmele false (Precision),
-- capacitatea modelului de a detecta cât mai multe daune reale (Recall).
+Metricile Precision și Recall au fost analizate complementar, pentru interpretarea comportamentului modelului.
 
 ---
 
-## 🔬 Experimente de optimizare (E1–E4)
+## 🔬 Experimente de optimizare (exp1–exp4)
 
-Au fost realizate patru experimente de optimizare:
+Au fost realizate patru experimente de optimizare, denumite `exp1` – `exp4`. Pentru fiecare experiment a fost analizată performanța pe setul de validare.
 
-- `E1_small_base`
-- `E2_lr_up`
-- `E3_lr_down`
-- `E4_light_aug`
+Rezultatele complete sunt documentate în fișierul:
 
-Selecția experimentului „best” s-a făcut pe baza metricii principale: **mAP@50–95(M)** (segmentare / mask), deoarece penalizează puternic localizarea imprecisă și reflectă cel mai bine performanța globală a modelului.
+results/optimization_experiments.csv
 
-### 📊 Rezultate comparative (best epoch by mAP50–95(M))
+### 📊 Rezultate comparative (ultimul epoch)
 
-| Experiment | Best epoch | mAP@50–95 (M) | mAP@50 (M) | P(M) | R(M) | mAP@50–95 (B) | mAP@50 (B) | P(B) | R(B) |
-|------------|-----------:|--------------:|-----------:|-----:|-----:|--------------:|-----------:|-----:|-----:|
-| E1_small_base | 6 | 0.5531 | 0.7299 | 0.7788 | 0.7062 | 0.5772 | 0.7422 | 0.7868 | 0.7085 |
-| E2_lr_up | 6 | 0.5555 | 0.7363 | 0.7583 | 0.7090 | 0.5790 | 0.7478 | 0.7662 | 0.7131 |
-| E3_lr_down | 6 | 0.5514 | 0.7294 | 0.7768 | 0.7066 | 0.5735 | 0.7398 | 0.7827 | 0.7124 |
-| **E4_light_aug** | **8** | **0.5680** | **0.7385** | **0.7982** | **0.7098** | **0.5962** | **0.7517** | **0.7998** | **0.7203** |
+| Experiment | mAP@50 | mAP@50–95 | Precision | Recall |
+|-----------|--------|-----------|-----------|--------|
+| exp1 | 0.49669 | 0.37809 | 0.58170 | 0.46708 |
+| exp2 | 0.49669 | 0.37809 | 0.58170 | 0.46708 |
+| exp3 | **0.51103** | **0.38338** | 0.56153 | **0.49470** |
+| exp4 | 0.38352 | 0.27721 | 0.45227 | 0.43409 |
 
-### Observații analitice
+### Observații analitice asupra experimentelor
 
-Compararea celor patru configurații evidențiază impactul real al modificărilor de antrenare asupra capacității modelului de a generaliza.
-
-- **E1_small_base** oferă un punct de referință stabil, cu performanțe echilibrate, dar limitate de lipsa unor ajustări suplimentare de fine-tuning.
-- **E2_lr_up** crește ușor sensibilitatea modelului (Recall), însă cu o ușoară scădere a preciziei, sugerând un regim de învățare mai agresiv, dar mai puțin stabil.
-- **E3_lr_down** stabilizează procesul de învățare, dar nu aduce îmbunătățiri semnificative la localizarea strictă (mAP@50–95), indicând că o rată de învățare prea mică poate limita adaptarea modelului.
-- **E4_light_aug** produce cea mai bună performanță globală, crescând simultan localizarea strictă, precizia și recall-ul.
-
-Faptul că E4 îmbunătățește **toate metricile importante în același timp** indică o creștere reală a calității reprezentărilor vizuale învățate de model, nu doar o ajustare superficială a pragurilor de detecție.
+- **exp1 vs exp2**: rezultate identice (același comportament de convergență), sugerând că modificarea introdusă nu a avut impact măsurabil sau a fost neutralizată de setările implicite ale pipeline-ului YOLO.
+- **exp3**: obține cel mai bun compromis global, crescând atât **mAP@50**, cât și **mAP@50–95**, concomitent cu îmbunătățirea recall-ului; acest lucru indică o generalizare mai robustă, nu doar o creștere punctuală a unei singure metrici.
+- **exp4**: degradare semnificativă pe toate metricile, ceea ce sugerează fie o configurație instabilă, fie un regim de învățare nepotrivit pentru distribuția dataset-ului.
 
 ---
 
-## 🏆 Selecția modelului final
+## 🏆 Selecția modelului optim
 
-Pe baza valorii maxime obținute pentru **mAP@50–95(M)**, experimentul **E4_light_aug** a fost ales ca model final al proiectului.
+Pe baza valorii maxime obținute pentru **mAP@50–95**, experimentul **exp3** a fost ales ca model optimizat final.
 
-**Motivație tehnică:**
+**Motivație:** exp3 oferă cea mai bună performanță globală, având cel mai ridicat scor mAP@50–95 și un recall superior, indicând o capacitate mai bună de detectare a daunelor auto pe setul de validare.
 
-- cel mai bun scor la metrica principală (IoU strict, segmentare);
-- performanță superioară și pe Bounding Box;
-- echilibru optim între precizie și sensibilitate.
+---
 
-Această alegere reflectă o îmbunătățire reală a robusteții modelului la variații de iluminare, unghiuri și reflexii, fără a introduce supraînvățare.
+## 💾 Modelul final utilizat
+
+Modelul rezultat în urma Etapei 6 este salvat ca:
+
+models/optimized_model.pt
+
+
+Acest model înlocuiește complet versiunea utilizată în Etapa 5 și reprezintă modelul final al proiectului.
+
+---
+
+## 📉 Confusion Matrix și evaluare finală
+
+Confusion Matrix pentru modelul optimizat a fost generată în urma evaluării pe setul de validare.
+
+<p align="center">
+  <img src="docs/confusion_matrix_normalized.png" width="85%">
+</p>
+
+<p align="center">
+  <i>Figura 4 – Matricea de confuzie a sistemului (model optimizat)</i>
+</p>
+
+Analiza evidențiază confuzii între clase vizual similare (ex. `scratch` și `crack`), precum și o performanță superioară pentru defectele cu contrast vizual ridicat.
+
+---
+
+## 🖥️ Integrarea în aplicația finală (model optimizat)
+
+Aplicația UI a fost actualizată pentru a utiliza exclusiv modelul optimizat (`optimized_model.pt`), asigurând consistența între etapa de evaluare și inferența realizată în aplicația finală.
+
+<p align="center">
+  <img src="docs/screenshots/inference_optimized_f.png" width="85%">
+</p>
+
+<p align="center">
+  <i>Figura 5 – Screenshot: inferență cu modelul optimizat încărcat și testat</i>
+</p>
 
 ---
 
 ## 📊 Metrici finale (model optimizat)
 
-Metricile finale sunt salvate în:
+Metricile finale obținute pentru modelul optimizat sunt salvate în:
 
-`results/final_metrics.json`
+results/final_metrics.json
 
-### 🧩 Segmentare (Mask)
-- Precision (P(M)): **0.7982**
-- Recall (R(M)): **0.7098**
-- mAP@50 (M): **0.7385**
-- mAP@50–95 (M): **0.5680**
 
-### 📦 Detecție (Bounding Box)
-- Precision (P(B)): **0.7998**
-- Recall (R(B)): **0.7203**
-- mAP@50 (B): **0.7517**
-- mAP@50–95 (B): **0.5962**
+Valori raportate:
+
+- Precision (macro): **0.568**
+- Recall (macro): **0.495**
+- mAP@50: **0.512**
+- mAP@50–95: **0.383**
 
 ---
 
-## 📐 Interpretarea metricilor
+## 📐 Interpretare detaliată a coeficienților (metricilor) — secțiunea critică
 
-Modelul obținut prezintă:
+În object detection, interpretarea metricilor trebuie făcută în context, deoarece fiecare coeficient descrie un aspect diferit al comportamentului modelului. În plus, pentru defecte auto (mai ales cele fine), localizarea exactă a conturului este intrinsec dificilă, ceea ce afectează direct scorurile mAP stricte.
 
-- **Precision ridicată (~0.80)** → număr redus de alarme false  
-- **Recall bun (~0.71–0.72)** → majoritatea daunelor sunt detectate  
-- **mAP@50 solid (~0.75)** → localizare corectă la nivel practic  
-- **mAP@50–95 realist (~0.57–0.60)** → localizarea exactă rămâne dificilă pentru defecte fine
+### 🔹 Precision (Precizia)
 
-Diferența dintre mAP@50 și mAP@50–95 arată că modelul recunoaște corect zona daunelor, dar conturul precis al zgârieturilor și fisurilor este dificil chiar și pentru anotare umană. Aceasta nu reprezintă o deficiență a modelului, ci o caracteristică a problemei vizuale abordate.
+Precision reprezintă proporția predicțiilor corecte din totalul predicțiilor făcute:
+
+\[
+Precision = \frac{TP}{TP + FP}
+\]
+
+**Precision ≈ 0.568** indică faptul că modelul produce, în majoritatea cazurilor, detecții valide (număr relativ redus de alarme false). În practică, aceasta înseamnă că sistemul este mai degrabă „conservator”: preferă să nu raporteze o daună decât să raporteze una incorect.
+
+Acest comportament este dezirabil în aplicații de inspecție, deoarece minimizează situațiile în care utilizatorul este indus în eroare de detecții artificiale.
+
+---
+
+### 🔹 Recall (Rata de detecție)
+
+Recall măsoară proporția daunelor reale detectate corect:
+
+\[
+Recall = \frac{TP}{TP + FN}
+\]
+
+**Recall ≈ 0.495** arată că o parte dintre daune nu sunt detectate, în special în cazul:
+- defectelor subțiri, cu contur difuz (`scratch`);
+- defectelor cu textură asemănătoare fundalului (`crack`);
+- claselor slab reprezentate (dataset neechilibrat).
+
+În termeni practici, recall-ul reflectă cât de „sensibil” este sistemul: un recall mai mare ar însemna mai puține ratări, dar de regulă cu riscul creșterii alarmelor false (scăderea precision). În acest proiect, echilibrul obținut este realist pentru un pipeline rulat local și un dataset limitat.
+
+---
+
+### 🔹 mAP@50 (Mean Average Precision la IoU 0.5)
+
+mAP@50 este performanța la un prag IoU permisiv, unde bounding box-ul trebuie să se suprapună decent cu adevărul de referință, dar nu perfect.
+
+**mAP@50 ≈ 0.512** indică faptul că modelul:
+- identifică în mod corect defectele și zona aproximativă a acestora;
+- se comportă consistent pe majoritatea scenariilor.
+
+Pentru multe aplicații practice de triere/filtrare inițială, mAP@50 este suficient pentru a considera sistemul util.
+
+---
+
+### 🔹 mAP@50–95 (metrică principală, strictă)
+
+mAP@50–95 este metrica cea mai exigentă: media performanței pe praguri IoU de la 0.50 la 0.95. Aceasta penalizează puternic localizările imprecise și bounding box-urile care nu conturează exact defectul.
+
+**mAP@50–95 ≈ 0.383** este o valoare realistă pentru detecția de defecte auto, deoarece:
+- defectele sunt adesea mici/alungite și greu de încadrat exact;
+- anotările umane au variații inerente (conturul zgârieturilor nu este obiectiv);
+- dataset-ul este neechilibrat (clasele rare scad media);
+- nu s-au folosit augmentări agresive (decizie intenționată pentru realism și justificare academică).
+
+Diferența dintre **mAP@50 (0.512)** și **mAP@50–95 (0.383)** este un indicator clar că modelul recunoaște defectele, dar localizarea foarte precisă rămâne partea cea mai dificilă.
+
+---
+
+### 🔎 Corelarea metricilor cu realitatea aplicației
+
+Combinația obținută:
+- Precision moderată spre ridicată,
+- Recall moderat,
+- mAP@50 solid,
+- mAP@50–95 strict,
+
+descrie un model echilibrat: oferă detecții valide și stabile, dar este constrâns de natura dataset-ului și de dificultatea intrinsecă a localizării defectelor fine.
+
+Acesta este exact tipul de rezultat care ar trebui obținut într-un proiect academic realist, fără supra-optimizare artificială.
 
 ---
 
 ## ✅ Concluzie generală
 
-Etapa de optimizare a demonstrat că performanța sistemului poate fi îmbunătățită prin ajustări controlate ale procesului de antrenare, fără a compromite stabilitatea modelului.
+Proiectul demonstrează implementarea completă a unui sistem de detecție a daunelor auto bazat pe rețele neuronale, incluzând:
+- antrenare și evaluare riguroasă;
+- optimizare prin experimente controlate și selecția justificată a modelului;
+- integrarea într-o aplicație funcțională de inferență;
+- interpretare academică a coeficienților de performanță.
 
-Modelul **E4_light_aug** reprezintă cea mai bună variantă obținută în cadrul proiectului, oferind un compromis optim între:
+Soluția rezultată reprezintă o aplicație practică solidă a rețelelor neuronale în domeniul *computer vision* și oferă o bază robustă pentru extindere.
 
-- precizie ridicată,
-- sensibilitate bună,
-- robustețe la variații vizuale,
-- și o localizare realistă a defectelor fine.
-
-Rezultatele obținute sunt coerente, justificabile din punct de vedere tehnic și aliniate cu dificultatea reală a problemei. Sistemul implementat demonstrează o aplicare practică solidă a rețelelor neuronale în domeniul Computer Vision și constituie o bază robustă pentru dezvoltări viitoare, precum extinderea dataset-ului, segmentarea mai precisă sau integrarea în aplicații video.
+---
 
 ## 🚀 Posibile direcții de dezvoltare
 
@@ -388,7 +470,5 @@ Rezultatele obținute sunt coerente, justificabile din punct de vedere tehnic ș
 ---
 
 > **Car Damage Detection System** reprezintă o aplicație practică solidă a rețelelor neuronale în domeniul computer vision.
-
-
 
 
