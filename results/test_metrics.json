@@ -1,0 +1,67 @@
+{
+  "evaluated_model": "models/optimized_model.pt",
+  "data_config": "config/car_damage.yaml",
+  "created_at": "2026-02-03T19:07:59",
+  "split_reports": {
+    "train": {
+      "split": "train",
+      "images_dir": "data\\images_enhanced\\train\\images",
+      "labels_dir": "data\\images_enhanced\\train\\labels",
+      "n_images": 495,
+      "n_labels": 495,
+      "detect_only_labels_est": 495,
+      "seg_labels_est": 0,
+      "bad_read_labels_est": 0,
+      "examples_detect_only": [
+        "data\\images_enhanced\\train\\labels\\000007.txt",
+        "data\\images_enhanced\\train\\labels\\000008.txt",
+        "data\\images_enhanced\\train\\labels\\000010.txt",
+        "data\\images_enhanced\\train\\labels\\000028.txt",
+        "data\\images_enhanced\\train\\labels\\000035.txt"
+      ],
+      "examples_seg": [],
+      "examples_bad": []
+    },
+    "val": {
+      "split": "val",
+      "images_dir": "data\\images_enhanced\\val\\images",
+      "labels_dir": "data\\images_enhanced\\val\\labels",
+      "n_images": 135,
+      "n_labels": 135,
+      "detect_only_labels_est": 135,
+      "seg_labels_est": 0,
+      "bad_read_labels_est": 0,
+      "examples_detect_only": [
+        "data\\images_enhanced\\val\\labels\\000007.txt",
+        "data\\images_enhanced\\val\\labels\\000008.txt",
+        "data\\images_enhanced\\val\\labels\\000028.txt",
+        "data\\images_enhanced\\val\\labels\\000078.txt",
+        "data\\images_enhanced\\val\\labels\\000085.txt"
+      ],
+      "examples_seg": [],
+      "examples_bad": []
+    },
+    "test": {
+      "split": "test",
+      "images_dir": "data\\images_enhanced\\test\\images",
+      "labels_dir": "data\\images_enhanced\\test\\labels",
+      "n_images": 135,
+      "n_labels": 135,
+      "detect_only_labels_est": 135,
+      "seg_labels_est": 0,
+      "bad_read_labels_est": 0,
+      "examples_detect_only": [
+        "data\\images_enhanced\\test\\labels\\000014.txt",
+        "data\\images_enhanced\\test\\labels\\000032.txt",
+        "data\\images_enhanced\\test\\labels\\000037.txt",
+        "data\\images_enhanced\\test\\labels\\000049.txt",
+        "data\\images_enhanced\\test\\labels\\000069.txt"
+      ],
+      "examples_seg": [],
+      "examples_bad": []
+    }
+  },
+  "mode": "predict_only",
+  "used_split": "val",
+  "predict_output_dir": "results/predictions_val\\run1"
+}

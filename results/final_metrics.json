@@ -1,0 +1,10 @@
+{
+  "evaluated_model": "models/optimized_model.pt",
+  "split": "test",
+  "precision_mask": 0.798,
+  "recall_mask": 0.710,
+  "mAP50_mask": 0.739,
+  "mAP50_95_mask": 0.568,
+  "source": "experiments_summary.csv",
+  "note": "Metrici obținute prin evaluare YOLO pe setul de test"
+}

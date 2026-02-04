@@ -1,0 +1,8 @@
+ultralytics==8.2.0
+numpy
+pandas
+matplotlib
+opencv-python
+tqdm
+pyyaml
+flask
